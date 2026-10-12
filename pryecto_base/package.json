@@ -1,12 +1,17 @@
 {
-  "name": "pryecto_base",
+  "name": "semana-ingenieria-fes-aragon",
   "version": "1.0.0",
-  "description": "Proyecto base de Node.js",
+  "description": "Memoria de la Semana de Ingeniería 2027-1 · FES Aragón, UNAM",
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon index.js"
+    "start": "node index.js",
+    "server": "nodemon index.js",
+    "db:init": "node scripts/db-init.js",
+    "db:seed": "node scripts/db-seed.js",
+    "test": "node --test --test-concurrency=1 tests/integration.test.js",
+    "test:e2e": "playwright test",
+    "test:all": "npm test && npm run test:e2e"
   },
   "keywords": [
     "express",
@@ -34,5 +39,8 @@
     "@playwright/test": "^1.64.0",
     "nodemon": "^3.1.14",
     "supertest": "^7.3.1"
+  },
+  "engines": {
+    "node": ">=22 <23"
   }
 }
