@@ -12,7 +12,8 @@
     "test": "node --test --test-concurrency=1 tests/integration.test.js",
     "test:e2e": "playwright test",
     "test:all": "npm test && npm run test:e2e",
-    "setup": "node scripts/setup-env.js"
+    "setup": "node scripts/setup-env.js",
+    "admin:password": "node scripts/admin-password.js"
   },
   "keywords": [
     "express",

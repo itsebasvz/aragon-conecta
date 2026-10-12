@@ -1,7 +1,7 @@
-import { createApp } from './app.js';
-import { db } from './config/db.js';
-import { config } from './config/env.js';
-import { sessionStore } from './config/session.js';
+import { createApp } from "./app.js";
+import { db } from "./config/db.js";
+import { config } from "./config/env.js";
+import { sessionStore } from "./config/session.js";
 
 try {
   await db.authenticate();
@@ -19,10 +19,13 @@ try {
       clearTimeout(timeout);
     });
   }
-  process.on('SIGTERM', shutdown);
-  process.on('SIGINT', shutdown);
+  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", shutdown);
 } catch (error) {
-  console.error('No se pudo iniciar. Revisa MariaDB y ejecuta npm run db:init.', error.message);
+  console.error(
+    "No se pudo iniciar. Revisa MariaDB y ejecuta npm run db:init.",
+    error.message,
+  );
   sessionStore.stopExpiringSessions();
   await db.close();
   process.exitCode = 1;
