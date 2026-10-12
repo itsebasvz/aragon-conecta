@@ -1,0 +1,8 @@
+<article class="event-card">
+  <a class="card-image-link" href="/conferencias/<%= c.slug %>" tabindex="-1" aria-hidden="true"><img src="<%= c.contenido.imagen.thumb %>" srcset="<%= c.contenido.imagen.small %> 480w, <%= c.contenido.imagen.thumb %> 960w" sizes="(max-width: 767px) 100vw, 33vw" width="<%= c.contenido.imagen.width %>" height="<%= c.contenido.imagen.height %>" loading="lazy" alt=""></a>
+  <div class="event-card-body"><span class="category"><%= c.categoria %></span><h3><a href="/conferencias/<%= c.slug %>"><%= c.contenido.corto %></a></h3><p><%= c.resumen %></p>
+    <div class="card-meta"><svg class="icon"><use href="#i-calendar"/></svg><span><%= formatDate(c.fecha) %></span></div>
+    <div class="card-people"><%= c.slug === 'infraestructura-del-manana' ? 'Brenda Bravo · Sebastián Vázquez · Daniel Rodríguez · Carlos Sánchez' : c.slug === 'hello-world' ? 'Equipo Hello World · FES Aragón' : 'Dr. Omar Mendoza González' %></div>
+    <a class="text-link card-action" href="/conferencias/<%= c.slug %>">Conocer la conferencia<span class="visually-hidden">: <%= c.contenido.corto %></span><svg class="icon"><use href="#i-arrow"/></svg></a>
+  </div>
+</article>

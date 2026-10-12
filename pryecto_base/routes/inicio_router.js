@@ -11,6 +11,7 @@ const commentLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHe
 router.get('/', inicio);
 router.get('/conferencias', catalogo);
 router.get('/conferencias/:slug', getConferencia, detalle);
+router.get('/conferencias/hello-world/materiales', (req, res) => res.render('materiales', { title: 'Presentación de Hello World' }));
 router.post('/conferencias/:slug/comentarios', commentLimit, getConferencia, comentar);
 router.get('/galeria', galeria);
 router.get('/acerca', (req, res) => res.render('acerca', { title: 'Acerca del proyecto' }));
