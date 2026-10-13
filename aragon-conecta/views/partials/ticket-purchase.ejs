@@ -1,0 +1,6 @@
+<% const boleto = catalogoBoletos.find((item) => item.slug === slug); if (boleto) { %>
+<div class="ticket-purchase">
+  <div class="ticket-price"><span>Boleto por persona</span><p><strong><%= formatMoney(boleto.precioCentavos) %></strong> <span>MXN</span></p></div>
+  <button class="btn btn-primary ticket-add" type="button" data-add-ticket="<%= slug %>" disabled><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg><span data-add-label>Agregar al carrito</span><span class="visually-hidden">: <%= boleto.titulo %></span></button>
+</div>
+<% } %>

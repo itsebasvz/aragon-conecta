@@ -9,8 +9,11 @@ import { sessionStore } from "./config/session.js";
 import { csrf, wantsJson } from "./middleware/security.js";
 import publicRouter from "./routes/inicio_router.js";
 import adminRouter from "./routes/admin_router.js";
+import { catalogoBoletos, formatMoney } from "./data/boletos.js";
 export function createApp() {
   const app = express();
+  app.locals.catalogoBoletos = catalogoBoletos;
+  app.locals.formatMoney = formatMoney;
   app.disable("x-powered-by");
   if (config.trustProxy) app.set("trust proxy", config.trustProxy);
   app.set("view engine", "ejs");
@@ -70,7 +73,7 @@ export function createApp() {
     res.set("Cache-Control", "no-store");
     res.locals.path = req.path;
     res.locals.description =
-      "Conferencias, ideas y comunidad de la Semana de Ingeniería 2027-1 en la FES Aragón, UNAM.";
+      "Elige tus conferencias y agrega boletos al carrito. Semana de Ingeniería 2027-1 en la FES Aragón, UNAM.";
     res.locals.flash = req.session.flash || null;
     delete req.session.flash;
     res.locals.admin = Boolean(req.session.adminId);

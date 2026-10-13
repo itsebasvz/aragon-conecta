@@ -191,7 +191,7 @@ export const conferencias = [
       fotos: [omar],
       materiales: [],
       fuente:
-        "Síntesis de la reseña académica de Jesús Sebastián Vázquez Zarco: Asistencia y participación ponencias. Las reflexiones se adaptaron para esta memoria de divulgación.",
+        "Síntesis de la reseña académica de Jesús Sebastián Vázquez Zarco: Asistencia y participación ponencias. Las reflexiones se adaptaron para este proyecto académico.",
     },
   },
   {

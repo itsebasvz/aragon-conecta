@@ -1,0 +1,28 @@
+<dialog id="carrito-dialog" class="cart-dialog" data-cart-dialog data-cart-catalog="<%= JSON.stringify(catalogoBoletos) %>" aria-labelledby="carrito-title">
+  <header class="cart-header"><div><p class="eyebrow">Semana de Ingeniería</p><h2 id="carrito-title">Tus boletos</h2></div><button class="cart-close" type="button" data-cart-close aria-label="Cerrar carrito">×</button></header>
+  <div class="visually-hidden" data-cart-dialog-live></div>
+  <div class="cart-shopping" data-cart-shopping>
+    <div class="cart-scroll">
+      <div class="cart-empty" data-cart-empty><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg><h3>Tu próxima idea empieza aquí</h3><p>Elige una conferencia y agrega tus boletos al carrito.</p><a class="btn btn-outline-primary" href="/conferencias">Explorar conferencias</a></div>
+      <ul class="cart-items" data-cart-items aria-label="Boletos en tu carrito"></ul>
+    </div>
+    <footer class="cart-summary">
+      <button class="cart-clear" type="button" data-cart-clear disabled>Vaciar carrito</button>
+      <div class="cart-total"><span>Total <small data-cart-units>0 boletos</small></span><strong data-cart-total>$0.00 <small>MXN</small></strong></div>
+      <p class="cart-demo-note">Compra de demostración · Sin cobro real</p>
+      <button class="btn btn-primary" type="button" data-cart-checkout disabled>Confirmar compra simulada <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      <button class="cart-continue" type="button" data-cart-close>Seguir explorando</button>
+      <p class="cart-storage-note" data-cart-storage hidden>El carrito se conservará mientras permanezcas en esta página.</p>
+    </footer>
+  </div>
+  <section class="cart-complete" data-cart-complete hidden aria-labelledby="compra-title">
+    <span class="cart-success-icon" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span>
+    <p class="eyebrow">Todo listo</p><h3 id="compra-title" tabindex="-1">¡Compra simulada completada!</h3>
+    <p>Esta es una demostración académica. No se realizó ningún cobro ni se emitieron boletos reales.</p>
+    <ul class="cart-receipt" data-cart-receipt aria-label="Resumen de la compra simulada"></ul>
+    <div class="cart-total"><span>Total de la simulación</span><strong data-cart-receipt-total></strong></div>
+    <button class="btn btn-primary" type="button" data-cart-close>Seguir explorando</button>
+  </section>
+</dialog>
+<div class="cart-toast" data-cart-toast hidden aria-hidden="true"></div>
+<div class="visually-hidden" data-cart-live></div>

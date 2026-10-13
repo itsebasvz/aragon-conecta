@@ -1,7 +1,7 @@
 {
   "name": "semana-ingenieria-fes-aragon",
   "version": "1.0.0",
-  "description": "Memoria de la Semana de Ingeniería 2027-1 · FES Aragón, UNAM",
+  "description": "Conferencias y compra simulada de boletos · FES Aragón, UNAM",
   "type": "module",
   "main": "index.js",
   "scripts": {
