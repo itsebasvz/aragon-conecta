@@ -1450,6 +1450,9 @@ figcaption {
   color: var(--muted);
   margin-block: 24px;
 }
+.admin-feedback {
+  margin-top: 24px;
+}
 .moderation-list {
   display: grid;
   gap: 20px;
