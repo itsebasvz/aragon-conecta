@@ -2,7 +2,7 @@
 
 Memoria académica de tres encuentros de la Semana de Ingeniería: **Infraestructura del mañana**, **Sostenibilidad en los datos** y **De Hello World a proyectos con impacto real**. Proyecto del primer parcial de Programación Web 2, grupo 1708, del profesor Miguel Angel Sánchez Hernández.
 
-**Autor:** Jesús Sebastián Vázquez Zarco · Ingeniería en Computación.
+**Autores:** Jesús Sebastián Vázquez Zarco y Valeria Guadalupe Guillén Hernández · Ingeniería en Computación.
 
 La aplicación vive en [`pryecto_base`](pryecto_base). Usa Node.js 22, Express 5, EJS, Bootstrap 5.3.8 local, Sequelize 6 y MariaDB 11.4. Incluye reseñas, galería, 29 diapositivas de Hello World, comentarios moderados y administración privada.
 
