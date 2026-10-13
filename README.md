@@ -4,7 +4,7 @@ Memoria académica de tres encuentros de la Semana de Ingeniería: **Infraestruc
 
 **Autores:** Jesús Sebastián Vázquez Zarco y Valeria Guadalupe Guillén Hernández · Ingeniería en Computación.
 
-La aplicación vive en [`pryecto_base`](pryecto_base). Usa Node.js 22, Express 5, EJS, Bootstrap 5.3.8 local, Sequelize 6 y MariaDB 11.4. Incluye reseñas, galería, 29 diapositivas de Hello World, comentarios moderados y administración privada.
+La aplicación vive en [`pryecto_base`](pryecto_base). Usa Node.js 22, Express 5, EJS, Bootstrap 5.3.8 local, Sequelize 6 y MariaDB 11.4. Incluye reseñas, 29 diapositivas de Hello World, comentarios moderados y administración privada.
 
 ## Arranque con Docker
 

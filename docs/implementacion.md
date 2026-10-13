@@ -34,7 +34,6 @@ El texto de los visitantes se escapa al renderizar EJS; no se interpreta como HT
 | `GET /conferencias` | Los tres encuentros. |
 | `GET /conferencias/:slug` | Reseña, fotografías y últimos 50 comentarios aprobados. |
 | `GET /conferencias/hello-world/materiales` | Presentación original, 29 diapositivas. |
-| `GET /galeria` | Fotografías agrupadas por encuentro. |
 | `GET /acerca` y `/privacidad` | Autoría, fuentes e información sobre participación. |
 | `GET /api/conferencias` | Arreglo JSON con slug, título, categoría, resumen, fecha, horario, sede y URL. |
 | `GET /api/conferencias/:slug/comentarios` | Hasta 50 comentarios aprobados: nombre, mensaje y fecha. |
