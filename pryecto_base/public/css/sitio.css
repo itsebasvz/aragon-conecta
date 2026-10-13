@@ -1022,12 +1022,13 @@ figcaption {
 }
 .photo-carousel .photo-link {
   flex: none;
-  background: #0b2342;
+  background: #e7edf4;
 }
 .photo-carousel .photo-link img {
   height: clamp(220px, 42vw, 520px);
   aspect-ratio: auto;
-  object-fit: contain;
+  object-fit: cover;
+  object-position: center 35%;
 }
 .photo-carousel figcaption {
   font-size: 13px;
@@ -1043,34 +1044,24 @@ figcaption {
 .photo-carousel-controls[hidden] {
   display: none;
 }
-.photo-carousel-thumbnails,
 .photo-carousel-navigation {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.photo-thumbnail {
-  padding: 3px;
-  border: 2px solid transparent;
+.photo-carousel-pause {
+  min-height: 44px;
+  padding: 8px;
+  border: 0;
   background: transparent;
-  border-radius: 4px;
-  opacity: 0.65;
+  color: var(--brand-primary);
+  font-size: 13px;
 }
-.photo-thumbnail[aria-current="true"],
-.photo-thumbnail:hover,
-.photo-thumbnail:focus-visible {
-  border-color: var(--brand-primary);
-  opacity: 1;
-}
-.photo-thumbnail img {
-  display: block;
-  width: 72px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 2px;
+.photo-carousel-pause:hover {
+  text-decoration: underline;
 }
 .photo-carousel-status {
-  margin: 0 8px 0 0;
+  margin: 0;
   font-size: 13px;
   color: var(--brand-primary);
   white-space: nowrap;

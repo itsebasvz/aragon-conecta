@@ -27,10 +27,32 @@ document.querySelectorAll("[data-photo-carousel]").forEach((carousel) => {
   const previous = carousel.querySelector("[data-photo-previous]");
   const next = carousel.querySelector("[data-photo-next]");
   const status = carousel.querySelector("[data-photo-status]");
-  const thumbnails = [...carousel.querySelectorAll("[data-photo-index]")];
+  const pause = carousel.querySelector("[data-photo-pause]");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let current = 0;
   let scrollFrame;
+  let timer;
+  let paused = reducedMotion.matches;
+  let hovered = false;
+  let visible = false;
+  let allowFocusedPlayback = false;
+
+  function schedule() {
+    clearTimeout(timer);
+    const focused = carousel.contains(document.activeElement);
+    const rotating = !paused && !hovered && visible && !document.hidden
+      && (!focused || allowFocusedPlayback)
+      && !document.querySelector(".image-dialog[open]");
+    status.setAttribute("aria-live", rotating ? "off" : "polite");
+    pause.textContent = paused ? "Reanudar" : "Pausar";
+    pause.setAttribute("aria-label", paused ? "Reanudar carrusel" : "Pausar carrusel");
+    if (rotating) {
+      timer = setTimeout(() => {
+        goTo((current + 1) % slides.length);
+        schedule();
+      }, 6000);
+    }
+  }
 
   function update() {
     const step = slides[1].offsetLeft - slides[0].offsetLeft;
@@ -40,10 +62,8 @@ document.querySelectorAll("[data-photo-carousel]").forEach((carousel) => {
     next.disabled = index === slides.length - 1;
     const message = `Foto ${index + 1} de ${slides.length}`;
     if (status.textContent !== message) status.textContent = message;
-    thumbnails.forEach((button, i) => {
-      if (i === index) button.setAttribute("aria-current", "true");
-      else button.removeAttribute("aria-current");
-      slides[i].querySelector("[data-lightbox]").tabIndex = i === index ? 0 : -1;
+    slides.forEach((slide, i) => {
+      slide.querySelector("[data-lightbox]").tabIndex = i === index ? 0 : -1;
     });
   }
 
@@ -57,9 +77,35 @@ document.querySelectorAll("[data-photo-carousel]").forEach((carousel) => {
 
   previous.addEventListener("click", () => goTo(current - 1));
   next.addEventListener("click", () => goTo(current + 1));
-  thumbnails.forEach((button, index) => {
-    button.addEventListener("click", () => goTo(index));
+  pause.addEventListener("click", () => {
+    paused = !paused;
+    allowFocusedPlayback = !paused;
+    schedule();
   });
+  carousel.addEventListener("pointerenter", (event) => {
+    if (event.pointerType !== "mouse") return;
+    hovered = true;
+    schedule();
+  });
+  carousel.addEventListener("pointerleave", () => {
+    hovered = false;
+    schedule();
+  });
+  carousel.addEventListener("focusin", () => {
+    allowFocusedPlayback = false;
+    schedule();
+  });
+  carousel.addEventListener("focusout", () => queueMicrotask(schedule));
+  document.addEventListener("visibilitychange", schedule);
+  document.querySelector(".image-dialog")?.addEventListener("close", schedule);
+  reducedMotion.addEventListener("change", () => {
+    if (reducedMotion.matches) paused = true;
+    schedule();
+  });
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting && entry.intersectionRatio >= 0.3;
+    schedule();
+  }, { threshold: 0.3 }).observe(track);
   track.addEventListener("keydown", (event) => {
     const target = {
       ArrowLeft: current - 1,
@@ -79,7 +125,10 @@ document.querySelectorAll("[data-photo-carousel]").forEach((carousel) => {
   });
   track.addEventListener("scroll", () => {
     cancelAnimationFrame(scrollFrame);
-    scrollFrame = requestAnimationFrame(update);
+    scrollFrame = requestAnimationFrame(() => {
+      update();
+      schedule();
+    });
   }, { passive: true });
   new ResizeObserver(() => {
     track.scrollTo({ left: slides[current].offsetLeft - slides[0].offsetLeft, behavior: "instant" });
@@ -87,6 +136,7 @@ document.querySelectorAll("[data-photo-carousel]").forEach((carousel) => {
   }).observe(track);
   controls.hidden = false;
   update();
+  schedule();
 });
 
 const dialog = document.querySelector(".image-dialog");

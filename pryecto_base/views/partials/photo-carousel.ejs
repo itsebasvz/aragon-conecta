@@ -8,15 +8,9 @@
   </div>
   <% if (fotos.length > 1) { %>
     <div class="photo-carousel-controls" data-photo-controls hidden>
-      <div class="photo-carousel-thumbnails" role="group" aria-label="Elegir fotografía">
-        <% fotos.forEach((photo, index) => { %>
-          <button type="button" class="photo-thumbnail" data-photo-index="<%= index %>" aria-controls="encuentro-fotos" aria-label="Ver fotografía <%= index + 1 %>: <%= photo.alt %>"<% if (index === 0) { %> aria-current="true"<% } %>>
-            <img src="<%= photo.small %>" width="72" height="48" alt="" loading="lazy">
-          </button>
-        <% }) %>
-      </div>
+      <p class="photo-carousel-status" data-photo-status role="status" aria-live="off" aria-atomic="true">Foto 1 de <%= fotos.length %></p>
       <div class="photo-carousel-navigation">
-        <p class="photo-carousel-status" data-photo-status role="status" aria-live="polite" aria-atomic="true">Foto 1 de <%= fotos.length %></p>
+        <button type="button" class="photo-carousel-pause" data-photo-pause aria-label="Pausar carrusel" aria-controls="encuentro-fotos">Pausar</button>
         <button type="button" class="photo-carousel-arrow photo-carousel-previous" data-photo-previous aria-label="Fotografía anterior" aria-controls="encuentro-fotos" disabled><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
         <button type="button" class="photo-carousel-arrow" data-photo-next aria-label="Fotografía siguiente" aria-controls="encuentro-fotos"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
       </div>
