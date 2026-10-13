@@ -4,7 +4,7 @@
 
 La petición llega a Express, pasa por los encabezados de seguridad, el análisis de formularios/JSON, la sesión y la validación CSRF. El router público o el privado selecciona un controlador. Los controladores consultan modelos Sequelize en MariaDB y renderizan EJS o devuelven JSON.
 
-La aplicación está en `pryecto_base/`, separada en `config`, `routes`, `controllers`, `middleware`, `models`, `views`, `public`, `data`, `scripts` y `tests`. `app.js` construye Express sin abrir puertos; `index.js` valida la conexión e inicia el servidor. Esto permite probar la aplicación con una base independiente.
+La aplicación está en `aragon-conecta/`, separada en `config`, `routes`, `controllers`, `middleware`, `models`, `views`, `public`, `data`, `scripts` y `tests`. `app.js` construye Express sin abrir puertos; `index.js` valida la conexión e inicia el servidor. Esto permite probar la aplicación con una base independiente.
 
 ## Correspondencia con los PDF
 

@@ -4,7 +4,7 @@ Memoria académica de tres encuentros de la Semana de Ingeniería: **Infraestruc
 
 **Autores:** Jesús Sebastián Vázquez Zarco y Valeria Guadalupe Guillén Hernández · Ingeniería en Computación.
 
-La aplicación vive en [`pryecto_base`](pryecto_base). Usa Node.js 22, Express 5, EJS, Bootstrap 5.3.8 local, Sequelize 6 y MariaDB 11.4. Incluye reseñas, carruseles de fotos en AWS y Hello World, 29 diapositivas de Hello World, comentarios moderados y administración privada.
+La aplicación vive en [`aragon-conecta`](aragon-conecta). Usa Node.js 22, Express 5, EJS, Bootstrap 5.3.8 local, Sequelize 6 y MariaDB 11.4. Incluye reseñas, carruseles de fotos en AWS y Hello World, 29 diapositivas de Hello World, comentarios moderados y administración privada.
 
 Los carruseles avanzan cada seis segundos y permiten pausar o recorrer las fotos manualmente. El avance se detiene al interactuar, al quedar fuera de vista o al ocultar la pestaña. Con la preferencia de movimiento reducido comienzan pausados; sin JavaScript se pueden recorrer mediante desplazamiento.
 
@@ -15,7 +15,7 @@ Las reflexiones se presentan en tarjetas con iniciales y fecha. El panel permite
 Requisitos: Node.js 22, npm y Docker con Compose. Desde esta carpeta:
 
 ```bash
-cd pryecto_base
+cd aragon-conecta
 npm ci
 npm run setup
 docker compose --profile web up -d --build --wait
@@ -48,14 +48,14 @@ Detén antes el servicio `app` si ya ocupa el puerto 2800. `npm start` inicia si
 
 Para una instalación propia de MariaDB, crea el esquema y un usuario con permisos sobre él, y configura `BD_NOMBRE`, `BD_USUARIO`, `BD_CLAVE`, `BD_HOST` y `BD_PORT` en `.env`. Las tablas se crean con `npm run db:init`. El puerto que genera el asistente para MariaDB en Docker es **3307**; ajústalo si usas otra instancia.
 
-`db:init` crea tablas faltantes sin `force` ni `alter`. `db:seed` agrega únicamente conferencias y administradores inexistentes: no sobrescribe reseñas, contraseñas ni comentarios. El contenido editorial inicial se define en `pryecto_base/data/conferencias.js`. Los cambios de esquema posteriores requieren una migración explícita.
+`db:init` crea tablas faltantes sin `force` ni `alter`. `db:seed` agrega únicamente conferencias y administradores inexistentes: no sobrescribe reseñas, contraseñas ni comentarios. El contenido editorial inicial se define en `aragon-conecta/data/conferencias.js`. Los cambios de esquema posteriores requieren una migración explícita.
 
 ## Pruebas
 
 Las pruebas usan una instancia independiente de MariaDB en el puerto 3308. La base de pruebas termina en `_test`; los datos de la aplicación no se utilizan.
 
 ```bash
-cd pryecto_base
+cd aragon-conecta
 docker compose --profile test up -d --wait db-test
 npx playwright install chromium
 npm run test:all
@@ -94,4 +94,4 @@ El historial original del proyecto base se conserva en este repositorio. Su remo
 
 ## Licencia
 
-El código original del proyecto se distribuye bajo la [licencia MIT](LICENSE). Los materiales del curso, fotografías, logotipos y demás recursos de terceros conservan los derechos y condiciones de sus respectivos autores. Consulta la [atribución de los recursos institucionales](assets/README.md#identidad-y-atribución) y la [licencia de la fuente Poppins](pryecto_base/public/fonts/OFL.txt).
+El código original del proyecto se distribuye bajo la [licencia MIT](LICENSE). Los materiales del curso, fotografías, logotipos y demás recursos de terceros conservan los derechos y condiciones de sus respectivos autores. Consulta la [atribución de los recursos institucionales](assets/README.md#identidad-y-atribución) y la [licencia de la fuente Poppins](aragon-conecta/public/fonts/OFL.txt).
