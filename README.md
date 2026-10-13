@@ -111,6 +111,7 @@ docker compose --profile test stop db-test
 
 ## 7. Documentación y licencia
 
+- [Guía para leer el código](docs/guia-codigo.md): recorrido sencillo del servidor, las vistas, el carrito y los comentarios.
 - [Guía de implementación](docs/implementacion.md): arquitectura, modelo de datos, rutas y configuración de producción.
 - [Criterios de diseño](DESIGN.md): pautas visuales y referencias institucionales.
 - [Fuentes del contenido](docs/info): reporte académico y materiales de las conferencias.
