@@ -181,8 +181,10 @@ const form = document.querySelector("[data-comment-form]");
 if (form) {
   const textarea = form.querySelector("[name=mensaje]");
   const counter = form.querySelector("[data-character-count]");
+  const progress = form.querySelector("[data-character-progress]");
   textarea.addEventListener("input", () => {
     counter.textContent = `${textarea.value.length}/1500`;
+    progress.value = textarea.value.length;
   });
   form.addEventListener("submit", async (event) => {
     if (!window.fetch) return;
@@ -219,6 +221,7 @@ if (form) {
         form.reset();
         form.querySelector("[name=_csrf]").value = token;
         counter.textContent = "0/1500";
+        progress.value = 0;
         status.focus();
       } else {
         for (const [field, message] of Object.entries(data.errors || {})) {

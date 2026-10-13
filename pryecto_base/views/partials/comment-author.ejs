@@ -1,0 +1,4 @@
+<div class="comment-author">
+  <span class="comment-avatar" aria-hidden="true"><%= nombre.trim().split(/\s+/u).slice(0, 2).map(word => Array.from(word)[0]).join('').toLocaleUpperCase('es-MX') %></span>
+  <div class="comment-identity"><strong><%= nombre %></strong><time datetime="<%= fecha.toISOString() %>"><%= formatCommentDate(fecha) %></time></div>
+</div>
