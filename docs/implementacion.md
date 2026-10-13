@@ -39,13 +39,15 @@ El texto de los visitantes se escapa al renderizar EJS; no se interpreta como HT
 | `GET /api/conferencias/:slug/comentarios` | Hasta 50 comentarios aprobados: nombre, mensaje y fecha. |
 | `POST /conferencias/:slug/comentarios` | Recibe `nombre`, `mensaje`, `acepto=si` y `_csrf`. |
 | `GET/POST /admin/login` | Acceso privado con correo y contraseña. |
-| `GET /admin` | Comentarios paginados, 20 por página. Filtros `estado`, `conferencia` y `pagina`. |
+| `GET /admin` | Comentarios paginados, 20 por página. Filtros `estado`, `conferencia`, búsqueda `q` por nombre o mensaje y `pagina`. Resumen de estados dentro de la conferencia y búsqueda seleccionadas. |
 | `PUT /admin/comentarios/:id` | Cambia el estado mediante un formulario POST con `?_method=PUT`. |
 | `DELETE /admin/comentarios/:id` | Requiere `confirmar=eliminar`; formulario POST con `?_method=DELETE`. |
 | `POST /admin/logout` | Destruye la sesión. |
 | `GET /health` | Comprueba la conexión; JSON `status=ok` o HTTP 503. |
 
 Un envío JSON válido devuelve HTTP 201 con `mensaje` y `estado=pendiente`; los campos inválidos devuelven 400 con `mensaje` y `errors`. Un formulario HTML válido redirige con 303 y muestra confirmación; uno inválido vuelve a renderizar los valores y errores. Los tokens CSRF inválidos devuelven 403; el límite de envíos, 429; los recursos inexistentes, 404.
+
+La moderación presenta acciones directas para aprobar, rechazar o devolver a pendientes. El campo `volver` conserva la selección al guardar o eliminar y solo admite destinos de `/admin` del mismo origen. La confirmación aparece debajo de los filtros. La última página se ajusta si queda vacía tras una eliminación. El formulario público muestra el proceso de revisión, contador y progreso de caracteres; su confirmación aparece junto al botón de envío. Los flujos de escritura funcionan también sin JavaScript.
 
 Las páginas que incluyen sesión o formularios utilizan `Cache-Control: no-store`. Las respuestas públicas nunca exponen contraseñas, sesiones ni comentarios pendientes/rechazados. Los documentos de clase, `.env` y los archivos fuera de `public` no se sirven como recursos estáticos.
 

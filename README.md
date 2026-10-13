@@ -8,6 +8,8 @@ La aplicación vive en [`pryecto_base`](pryecto_base). Usa Node.js 22, Express 5
 
 Los carruseles avanzan cada seis segundos y permiten pausar o recorrer las fotos manualmente. El avance se detiene al interactuar, al quedar fuera de vista o al ocultar la pestaña. Con la preferencia de movimiento reducido comienzan pausados; sin JavaScript se pueden recorrer mediante desplazamiento.
 
+Las reflexiones se presentan en tarjetas con iniciales y fecha. El panel permite buscar por nombre o texto, consultar contadores por estado y aprobar, rechazar o devolver a pendientes con acciones directas. Los contadores respetan la conferencia y la búsqueda seleccionadas; los filtros se conservan después de moderar o eliminar. Estos formularios también funcionan sin JavaScript.
+
 ## Arranque con Docker
 
 Requisitos: Node.js 22, npm y Docker con Compose. Desde esta carpeta:
@@ -70,9 +72,9 @@ No ejecutes integración y navegador simultáneamente: comparten la instancia de
 
 1. Recorre la portada y una conferencia: contenido renderizado desde MariaDB mediante Express y EJS.
 2. Envía una reflexión: se guarda con estado **pendiente** y aún no aparece públicamente.
-3. Entra a `/admin` y consulta el envío. Filtra por evento o estado.
-4. Cambia el estado a **aprobado** y recarga la conferencia para verlo publicado.
-5. Cámbialo a **rechazado** para retirarlo de la vista pública.
+3. Entra a `/admin` y consulta el envío. Usa las tarjetas de estado, el filtro de conferencia o la búsqueda por nombre y texto.
+4. Pulsa **Aprobar** y recarga la conferencia para verlo publicado.
+5. Pulsa **Rechazar** para retirarlo de la vista pública, o **Devolver a pendientes** para revisarlo después.
 6. Abre la confirmación de eliminación y bórralo. Esto demuestra las cuatro operaciones CRUD sin modificar el texto del visitante.
 7. Consulta `/api/conferencias` para mostrar una respuesta JSON. La guía técnica relaciona cada capacidad con los PDF del curso.
 
