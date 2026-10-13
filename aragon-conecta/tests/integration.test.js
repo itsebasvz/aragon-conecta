@@ -1,3 +1,5 @@
+// Pruebas del servidor con una base de datos aislada. Supertest simula peticiones HTTP y
+// assert comprueba que las respuestas y los datos sean los esperados.
 import "./env.js";
 import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
@@ -14,13 +16,18 @@ import { conferencias } from "../data/conferencias.js";
 const exec = promisify(execFile);
 const app = createApp();
 const slug = "infraestructura-del-manana";
+// Extrae el token del formulario renderizado, igual que lo recibiría un navegador.
 const tokenFrom = (html) => html.match(/name="_csrf" value="([^"]+)"/)?.[1];
+// Cada agente conserva sus cookies entre peticiones. Visitante y administrador usan
+// sesiones distintas.
 const visitor = request.agent(app);
 const admin = request.agent(app);
 let token;
 let adminToken;
 let commentId;
 let adminCookie;
+// Antes de los casos, crea desde cero sólo las tablas de la base _test y carga datos
+// conocidos.
 before(async () => {
   await db.authenticate();
   await db.sync({ force: true }); // Exclusivamente en la base aislada terminada en _test.
@@ -30,11 +37,14 @@ before(async () => {
     passwordHash: await bcrypt.hash(process.env.ADMIN_PASSWORD, 12),
   });
 });
+// Al terminar, cierra la tarea de sesiones y la conexión para no dejar procesos
+// pendientes.
 after(async () => {
   sessionStore.stopExpiringSessions();
   await db.close();
 });
 
+// Primero comprueba que las páginas y los recursos locales puedan consultarse sin errores.
 test("renderiza todas las páginas y los recursos locales", async () => {
   for (const url of [
     "/",
@@ -77,6 +87,8 @@ test("la API solo expone datos públicos y conserva la información confirmada",
   await request(app).get("/docs/CRUD_Persona.pdf").expect(404);
 });
 
+// El catálogo que recibe el navegador debe mostrar los mismos precios que las páginas de
+// detalle.
 test("ofrece boletos de demostración con precios iguales en catálogo y detalle", async () => {
   const page = await request(app).get("/conferencias").expect(200);
   const escaped = page.text.match(/data-cart-catalog="([^"]+)"/)[1];
@@ -93,6 +105,7 @@ test("ofrece boletos de demostración con precios iguales en catálogo y detalle
   assert.equal(await Comentario.count(), 0);
 });
 
+// Intenta enviar formularios sin un token correcto y verifica que no se creen comentarios.
 test("rechaza CSRF ausente, inválido y unicode sin producir un error de servidor", async () => {
   const page = await visitor.get(`/conferencias/${slug}`).expect(200);
   token = tokenFrom(page.text);
@@ -124,6 +137,7 @@ test("valida contenido y consentimiento en servidor", async () => {
   assert.equal(await Comentario.count(), 0);
 });
 
+// Comprueba que un visitante no pueda elegir aprobado enviando campos extra.
 test("crea un comentario pendiente y no permite asignar un estado público", async () => {
   const payload = {
     _csrf: token,
@@ -187,6 +201,8 @@ test("protege el panel y las operaciones de moderación", async () => {
   assert.equal((await Comentario.findByPk(commentId)).estado, "pendiente");
 });
 
+// Prueba el acceso con contraseña, la renovación de la cookie y el cambio de estado desde
+// una sesión administrativa.
 test("autentica con bcrypt, renueva la sesión y permite moderar", async () => {
   const loginPage = await admin.get("/admin/login").expect(200);
   const loginToken = tokenFrom(loginPage.text);
@@ -258,6 +274,8 @@ test("filtra, valida el estado y oculta los comentarios rechazados", async () =>
     .expect(404);
 });
 
+// Los filtros deben conservarse al moderar, pero no se debe permitir volver a una URL
+// externa.
 test("busca comentarios y conserva filtros sin permitir redirecciones externas", async () => {
   const found = await admin.get("/admin?q=Estudiante&estado=rechazado").expect(200);
   assert.match(found.text, /action="\/admin\/comentarios\/\d+\?_method=PUT"/);
@@ -275,6 +293,8 @@ test("busca comentarios y conserva filtros sin permitir redirecciones externas",
   }
 });
 
+// Crea suficientes datos para paginar y comprueba el regreso a una página válida después
+// de eliminar.
 test("ajusta la última página cuando se elimina su último comentario", async () => {
   const created = await Comentario.bulkCreate(Array.from({ length: 21 }, (_, i) => ({
     conferenciaId: 1, nombre: `Paginación UX ${i}`, mensaje: "Una reflexión para verificar la navegación entre páginas.",
@@ -292,6 +312,8 @@ test("ajusta la última página cuando se elimina su último comentario", async 
   }
 });
 
+// Repetir el seed no debe duplicar conferencias ni reemplazar los comentarios que ya
+// existen.
 test("la carga inicial es idempotente y conserva comentarios existentes", async () => {
   const count = await Comentario.count();
   for (let i = 0; i < 2; i++)
@@ -304,6 +326,8 @@ test("la carga inicial es idempotente y conserva comentarios existentes", async 
   assert.equal(await Comentario.count(), count);
 });
 
+// Ejecuta un proceso separado para demostrar que los datos no viven sólo en la memoria de
+// este servidor.
 test("conserva comentarios y sesiones en un proceso nuevo", async () => {
   await exec(process.execPath, ["tests/restart-probe.js"], {
     cwd: new URL("../", import.meta.url),
@@ -352,6 +376,8 @@ test("limita los envíos repetidos de comentarios", async () => {
   assert.ok(limited);
 });
 
+// Cambiar la contraseña debe permitir el nuevo acceso y dejar inválidas las sesiones
+// anteriores de ese administrador.
 test("rota la contraseña y revoca sesiones existentes de administración", async () => {
   const actor = request.agent(app);
   const loginPage = await actor.get("/admin/login");
@@ -382,6 +408,8 @@ test("rota la contraseña y revoca sesiones existentes de administración", asyn
   });
 });
 
+// Comprueba que entradas malformadas y cuerpos grandes se rechacen sin dejar caer el
+// servidor.
 test("rechaza JSON malformado, cuerpos excesivos y rutas de método inválido", async () => {
   await request(app)
     .post(`/conferencias/${slug}/comentarios`)
@@ -397,6 +425,7 @@ test("rechaza JSON malformado, cuerpos excesivos y rutas de método inválido", 
   await request(app).get("/.env").expect(404);
 });
 
+// Verifica que los intentos fallidos repetidos terminen recibiendo el límite de acceso.
 test("limita los intentos fallidos de inicio de sesión", async () => {
   const actor = request.agent(app);
   const loginPage = await actor.get("/admin/login");

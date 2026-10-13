@@ -1,6 +1,10 @@
+// Prueba el carrito y el pago ficticio desde el navegador. Cada caso comienza en un
+// contexto limpio; algunas pruebas abren otra pestaña para comprobar sincronización.
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+// Estos identificadores corresponden a las conferencias y a la clave real del carrito; los
+// helpers acortan los pasos de las pruebas.
 const key = "aragon-conecta:carrito:v1";
 const aws = "infraestructura-del-manana";
 const omar = "sostenibilidad-de-los-datos";
@@ -11,6 +15,7 @@ const dialog = (page) => page.locator("[data-cart-dialog]");
 const row = (page, slug) => page.locator(`[data-cart-item="${slug}"]`);
 const total = (page) => page.locator("[data-cart-total]");
 
+// Agrega boletos desde varias páginas y revisa cantidades, total, persistencia y vaciado.
 test("agrega desde tres páginas, persiste y permite editar, eliminar y vaciar", async ({ page }) => {
   await page.goto("/");
   await add(page, aws);
@@ -44,6 +49,8 @@ test("agrega desde tres páginas, persiste y permite editar, eliminar y vaciar",
   await expect(page.locator("[data-cart-toggle]")).toBeFocused();
 });
 
+// Registra las peticiones de escritura: el pago ficticio no debe enviar un cargo ni un
+// pedido al servidor.
 test("confirma una compra de demostración sin solicitudes de pago ni pedidos", async ({ page }) => {
   const writes = [];
   page.on("request", (request) => {
@@ -70,6 +77,8 @@ test("confirma una compra de demostración sin solicitudes de pago ni pedidos", 
   expect(writes).toEqual([]);
 });
 
+// Coloca datos dañados o manipulados en localStorage y verifica que el carrito use el
+// catálogo de precios vigente.
 test("recupera almacenamiento inválido y utiliza precios del catálogo vigente", async ({ page }) => {
   await page.goto("/");
   await page.evaluate((k) => localStorage.setItem(k, "{roto"), key);
@@ -90,6 +99,8 @@ test("recupera almacenamiento inválido y utiliza precios del catálogo vigente"
     .toEqual([{ slug: aws, cantidad: 3 }]);
 });
 
+// Prueba los extremos: no se puede bajar de un boleto ni superar noventa y nueve por
+// conferencia.
 test("respeta las cantidades entre 1 y 99", async ({ page }) => {
   await page.goto("/");
   await page.evaluate(({ k, aws }) => localStorage.setItem(k, JSON.stringify([{ slug: aws, cantidad: 99 }])), { k: key, aws });
@@ -108,6 +119,7 @@ test("respeta las cantidades entre 1 y 99", async ({ page }) => {
   await expect(row(page, aws).getByRole("button", { name: /Restar/ })).toBeDisabled();
 });
 
+// Hace que el almacenamiento arroje errores para comprobar la alternativa en memoria.
 test("permite usar el carrito aunque el navegador bloquee localStorage", async ({ page }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
@@ -127,6 +139,8 @@ test("permite usar el carrito aunque el navegador bloquee localStorage", async (
   expect(errors).toEqual([]);
 });
 
+// Recorre selección, pago y confirmación en distintos tamaños; revisa el foco, los bordes
+// de pantalla y la accesibilidad.
 test("carrito accesible y adaptable en escritorio, tableta y móvil", async ({ page }) => {
   test.setTimeout(90000);
   for (const width of [320, 360, 768, 1440]) {
@@ -171,6 +185,8 @@ test("carrito accesible y adaptable en escritorio, tableta y móvil", async ({ p
   }
 });
 
+// Dos pestañas del mismo contexto comparten localStorage; el contador debe reflejar los
+// cambios de ambas.
 test("cierra con el fondo exterior y sincroniza el carrito entre pestañas", async ({ page, context }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
@@ -188,6 +204,8 @@ test("cierra con el fondo exterior y sincroniza el carrito entre pestañas", asy
   await second.close();
 });
 
+// Prueba los tres métodos, las imágenes locales y el resumen sin pedir datos bancarios
+// reales.
 test("permite elegir Visa, Mastercard y PayPal con datos ficticios y recursos locales", async ({ page }) => {
   const external = [];
   const errors = [];
@@ -223,6 +241,7 @@ test("permite elegir Visa, Mastercard y PayPal con datos ficticios y recursos lo
   expect(errors).toEqual([]);
 });
 
+// Cerrar durante la espera del pago debe cancelar la confirmación y conservar los boletos.
 test("volver o cerrar el pago conserva el carrito y actualiza su resumen", async ({ page }) => {
   await page.goto("/");
   await add(page, aws);
@@ -245,6 +264,7 @@ test("volver o cerrar el pago conserva el carrito y actualiza su resumen", async
   await expect(page.locator("[data-cart-complete]")).toBeHidden();
 });
 
+// Si otra pestaña cambia la selección, el resumen de pago se actualiza antes de confirmar.
 test("revisa el carrito si cambia en otra pestaña durante el pago", async ({ page, context }) => {
   await page.goto("/");
   await add(page, hello);

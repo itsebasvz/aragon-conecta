@@ -1,3 +1,5 @@
+# Exclusiones de Git para la aplicación. .env.example sí se conserva porque sólo contiene
+# una plantilla.
 node_modules/
 .env
 .env.*

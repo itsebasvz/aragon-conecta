@@ -1,3 +1,5 @@
+# Archivos que no se copian a la imagen Docker: dependencias locales, claves, documentos,
+# pruebas y resultados.
 node_modules
 .env
 .env.*

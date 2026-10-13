@@ -1,3 +1,5 @@
+# Archivos locales que Git no debe guardar: dependencias, claves, resultados de pruebas y
+# registros.
 node_modules/
 .env
 .env.*

@@ -1,22 +1,33 @@
+# Define los contenedores locales y cómo se conectan. Docker Compose usa .env para
+# completar las claves que no deben guardarse en Git.
+# El nombre identifica este conjunto de servicios y sus recursos en Docker.
 name: semana-ingenieria
 services:
+  # MariaDB guarda las conferencias, comentarios y sesiones de esta aplicación.
   db:
     image: mariadb:11.4
     restart: unless-stopped
+    # Las expresiones con dólar toman valores de .env. Si falta una clave obligatoria, Compose
+    # pide configurarla.
     environment:
       MARIADB_DATABASE: ${BD_NOMBRE:-semana_ingenieria}
       MARIADB_USER: ${BD_USUARIO:-semana}
       MARIADB_PASSWORD: ${BD_CLAVE:?Configura BD_CLAVE en .env}
       MARIADB_ROOT_PASSWORD: ${BD_ROOT_CLAVE:?Configura BD_ROOT_CLAVE en .env}
+    # El puerto de MariaDB se publica sólo en la interfaz local del equipo.
     ports:
       - "127.0.0.1:${BD_PORT:-3307}:3306"
+    # El volumen conserva los datos aunque se vuelva a crear el contenedor.
     volumes:
       - datos-mariadb:/var/lib/mysql
+    # Antes de iniciar la aplicación, comprueba que MariaDB ya pueda aceptar conexiones.
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
       timeout: 5s
       retries: 20
+  # El perfil web agrega el servidor Express. Dentro de Docker, encuentra MariaDB por el
+  # nombre db.
   app:
     profiles: ["web"]
     build: .
@@ -31,9 +42,12 @@ services:
       NODE_ENV: ${NODE_ENV:-development}
     ports:
       - "127.0.0.1:${PORT:-2800}:2800"
+    # La aplicación espera a que la comprobación de salud de la base sea correcta.
     depends_on:
       db:
         condition: service_healthy
+  # Base separada para las pruebas. Su puerto y nombre son diferentes y sus datos viven
+  # temporalmente en memoria.
   db-test:
     profiles: ["test"]
     image: mariadb:11.4
@@ -51,5 +65,6 @@ services:
       interval: 3s
       timeout: 5s
       retries: 20
+# Declara el volumen persistente utilizado por la base de la aplicación.
 volumes:
   datos-mariadb:

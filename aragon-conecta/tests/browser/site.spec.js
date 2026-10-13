@@ -1,6 +1,9 @@
+// Pruebas de uso real con Playwright: páginas, teclado, fotos y comentarios. Axe revisa
+// criterios de accesibilidad que se pueden comprobar automáticamente.
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+// Lista compartida de páginas que deben funcionar en los distintos anchos de pantalla.
 const publicPages = [
   "/",
   "/conferencias",
@@ -12,6 +15,8 @@ const publicPages = [
   "/admin/login",
 ];
 
+// Visita las páginas a 320, 360, 768 y 1440 píxeles y busca desbordamientos, imágenes
+// rotas o errores de JavaScript.
 for (const width of [320, 360, 768, 1440]) {
   test(`páginas legibles y sin desbordamiento a ${width}px`, async ({
     page,
@@ -42,6 +47,8 @@ for (const width of [320, 360, 768, 1440]) {
   });
 }
 
+// Usa el teclado para abrir y cerrar el menú y comprueba que el foco regrese al control
+// correcto.
 test("menú móvil accesible con teclado y ampliación de fotografías", async ({
   page,
 }) => {
@@ -68,6 +75,8 @@ test("menú móvil accesible con teclado y ampliación de fotografías", async (
   await expect(photo).toBeFocused();
 });
 
+// Prueba controles manuales, posición de la foto y ampliación antes y después de cambiar
+// el tamaño de pantalla.
 test("carrusel con flechas, teclado y ampliación", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/conferencias/infraestructura-del-manana");
@@ -108,6 +117,8 @@ test("carrusel con flechas, teclado y ampliación", async ({ page }) => {
   await expect(page.locator(".source-note")).toContainText("Fuente de la reseña");
 });
 
+// Espera el avance real del temporizador; por eso este caso permite más tiempo que una
+// prueba de clics.
 test("avance automático, pausa, reanudación y vuelta al inicio", async ({ page }) => {
   test.setTimeout(45000);
   await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -145,6 +156,8 @@ test("fotografías accesibles sin JavaScript", async ({ browser }) => {
   await context.close();
 });
 
+// Representa el flujo completo: un visitante comenta y otro navegador administra la
+// publicación y eliminación.
 test("envío progresivo, moderación, publicación y eliminación", async ({
   page,
   browser,
@@ -207,6 +220,8 @@ test("envío progresivo, moderación, publicación y eliminación", async ({
   await admin.close();
 });
 
+// Desactiva JavaScript para verificar el envío HTML normal y el aviso de que el carrito
+// requiere scripts.
 test("formularios y navegación funcionan sin JavaScript", async ({
   browser,
 }) => {
@@ -235,6 +250,7 @@ test("formularios y navegación funcionan sin JavaScript", async ({
   await context.close();
 });
 
+// Registra las descargas de la página y comprueba que no dependan de servicios externos.
 test("recursos locales, movimiento reducido y capturas de revisión", async ({
   page,
 }) => {
@@ -256,6 +272,8 @@ test("recursos locales, movimiento reducido y capturas de revisión", async ({
   await page.screenshot({ path: "/tmp/semanaing-movil.png", fullPage: true });
 });
 
+// Axe detecta problemas como nombres de controles o contraste. Complementa, pero no
+// sustituye, la revisión manual.
 test("accesibilidad automática WCAG AA en páginas públicas", async ({
   page,
 }) => {
