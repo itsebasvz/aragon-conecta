@@ -219,6 +219,8 @@ test("formularios y navegación funcionan sin JavaScript", async ({
     "http://127.0.0.1:2810/conferencias/sostenibilidad-de-los-datos",
   );
   await expect(page.locator("#nav-links")).toBeVisible();
+  await expect(page.locator("[data-add-ticket]")).toBeDisabled();
+  await expect(page.locator(".cart-noscript")).toContainText("activa JavaScript");
   await page.getByLabel("Nombre visible").fill("Visitante sin JavaScript");
   await page
     .getByLabel("Tu reflexión")

@@ -77,6 +77,22 @@ test("la API solo expone datos públicos y conserva la información confirmada",
   await request(app).get("/docs/CRUD_Persona.pdf").expect(404);
 });
 
+test("ofrece boletos de demostración con precios iguales en catálogo y detalle", async () => {
+  const page = await request(app).get("/conferencias").expect(200);
+  const escaped = page.text.match(/data-cart-catalog="([^"]+)"/)[1];
+  const catalog = JSON.parse(escaped.replaceAll("&#34;", '"').replaceAll("&quot;", '"'));
+  assert.deepEqual(catalog.map((c) => c.precioCentavos), [25000, 15000, 10000]);
+  for (const [slug, price] of [["infraestructura-del-manana", "250.00"], ["sostenibilidad-de-los-datos", "150.00"], ["hello-world", "100.00"]]) {
+    const detail = await request(app).get(`/conferencias/${slug}`).expect(200);
+    assert.ok(page.text.includes(`$${price}`));
+    assert.ok(detail.text.includes(`$${price}`));
+    assert.ok(detail.text.includes(`data-add-ticket="${slug}"`));
+    assert.match(detail.text, /Fechas y materiales del evento original/);
+  }
+  await request(app).get("/js/carrito.js").expect(200);
+  assert.equal(await Comentario.count(), 0);
+});
+
 test("rechaza CSRF ausente, inválido y unicode sin producir un error de servidor", async () => {
   const page = await visitor.get(`/conferencias/${slug}`).expect(200);
   token = tokenFrom(page.text);
