@@ -87,3 +87,7 @@ La interfaz sigue [`DESIGN.md`](DESIGN.md) y el manual institucional: firmas ori
 2027-1 es el periodo académico; los eventos documentados ocurrieron en 2026. AWS se presenta con los datos confirmados: 25 de septiembre, 17:00–18:30, auditorio del DUACyD. Hello World: 23 de septiembre, 12:30, auditorio A1. Se omiten fecha, horario y sede del Dr. Omar al no estar acreditados.
 
 El historial original del proyecto base se conserva en este repositorio. Su remoto se identifica como `proyecto-base` y apunta al repositorio anterior de clase; no es un destino de publicación de esta web. Los commits nuevos utilizan mensajes convencionales en español.
+
+## Licencia
+
+El código original del proyecto se distribuye bajo la [licencia MIT](LICENSE). Los materiales del curso, fotografías, logotipos y demás recursos de terceros conservan los derechos y condiciones de sus respectivos autores. Consulta la [atribución de los recursos institucionales](assets/README.md#identidad-y-atribución) y la [licencia de la fuente Poppins](pryecto_base/public/fonts/OFL.txt).
