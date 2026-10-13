@@ -15,6 +15,15 @@
   const clear = dialog.querySelector("[data-cart-clear]");
   const shopping = dialog.querySelector("[data-cart-shopping]");
   const complete = dialog.querySelector("[data-cart-complete]");
+  const payment = dialog.querySelector("[data-payment-screen]");
+  const paymentConfirm = dialog.querySelector("[data-payment-confirm]");
+  const paymentBack = dialog.querySelector("[data-payment-back]");
+  const paymentRadios = [...payment.querySelectorAll('[name="metodo-pago"]')];
+  const paymentMethods = {
+    visa: { nombre: "Visa", terminacion: "4242", imagen: "/media/pagos/visa.png" },
+    mastercard: { nombre: "Mastercard", terminacion: "4444", imagen: "/media/pagos/mastercard.svg" },
+    paypal: { nombre: "PayPal" },
+  };
   const toast = document.querySelector("[data-cart-toast]");
   const live = document.querySelector("[data-cart-live]");
   const dialogLive = dialog.querySelector("[data-cart-dialog-live]");
@@ -25,6 +34,60 @@
   let toastTimer;
   let storageAvailable = true;
   let cart = [];
+  let paymentTimer;
+  let processing = false;
+
+  function selectedMethod() {
+    return paymentMethods[paymentRadios.find((radio) => radio.checked)?.value] || paymentMethods.visa;
+  }
+
+  function setProcessing(value) {
+    processing = value;
+    paymentConfirm.disabled = value || !cart.length;
+    paymentConfirm.setAttribute("aria-busy", String(value));
+    paymentBack.disabled = value;
+    for (const radio of paymentRadios) radio.disabled = value;
+    payment.querySelector(".payment-spinner").hidden = !value;
+    payment.querySelector("[data-payment-confirm-label]").textContent = value
+      ? "Simulando pago…" : `Simular pago de ${money(total())} MXN`;
+  }
+
+  function showCart() {
+    clearTimeout(paymentTimer);
+    setProcessing(false);
+    shopping.hidden = false;
+    complete.hidden = payment.hidden = true;
+    dialog.dataset.stage = "cart";
+    dialog.querySelector("#carrito-title").textContent = "Tus boletos";
+    render();
+  }
+
+  function renderPayment() {
+    const method = selectedMethod();
+    const isPayPal = method === paymentMethods.paypal;
+    payment.querySelector("[data-payment-card]").hidden = isPayPal;
+    payment.querySelector("[data-payment-paypal]").hidden = !isPayPal;
+    const logo = payment.querySelector("[data-payment-card-logo]");
+    if (!isPayPal) {
+      logo.src = method.imagen;
+      logo.alt = method.nombre;
+      const number = payment.querySelector("[data-payment-number]");
+      number.textContent = `••••  ••••  ••••  ${method.terminacion}`;
+      number.setAttribute("aria-label", `Tarjeta ficticia terminada en ${method.terminacion}`);
+    }
+    paymentConfirm.classList.toggle("is-paypal", isPayPal);
+    const summary = payment.querySelector("[data-payment-items]");
+    summary.replaceChildren();
+    for (const item of cart) {
+      const ticket = catalog.get(item.slug);
+      const row = element("li", "");
+      row.append(element("span", "", ticket.titulo), element("small", "", unitsLabel(item.cantidad)),
+        element("strong", "", `${money(ticket.precioCentavos * item.cantidad)} MXN`));
+      summary.append(row);
+    }
+    payment.querySelector("[data-payment-total]").textContent = `${money(total())} MXN`;
+    if (!processing) setProcessing(false);
+  }
 
   function normalize(value) {
     if (!Array.isArray(value)) return [];
@@ -123,6 +186,7 @@
       row.append(image, info);
       items.append(row);
     }
+    renderPayment();
   }
 
   function update() {
@@ -134,9 +198,8 @@
   update();
   toggle.hidden = false;
   toggle.addEventListener("click", () => {
-    shopping.hidden = false;
-    complete.hidden = true;
-    render();
+    paymentRadios[0].checked = true;
+    showCart();
     dialog.showModal();
     document.body.classList.add("cart-open");
     toast.hidden = true;
@@ -151,12 +214,14 @@
       || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
   });
   dialog.addEventListener("close", () => {
+    clearTimeout(paymentTimer);
+    setProcessing(false);
     document.body.classList.remove("cart-open");
     toggle.focus({ preventScroll: true });
   });
   dialog.addEventListener("keydown", (event) => {
     if (event.key !== "Tab") return;
-    const controls = [...dialog.querySelectorAll('a[href], button:not(:disabled), [tabindex="0"]')]
+    const controls = [...dialog.querySelectorAll('a[href], button:not(:disabled), input:checked:not(:disabled), [tabindex="0"]')]
       .filter((node) => node.getClientRects().length > 0);
     const first = controls[0];
     const last = controls.at(-1);
@@ -215,7 +280,29 @@
   });
   checkout.addEventListener("click", () => {
     if (!cart.length || checkout.disabled) return;
-    checkout.disabled = true;
+    shopping.hidden = complete.hidden = true;
+    payment.hidden = false;
+    dialog.dataset.stage = "payment";
+    dialog.querySelector("#carrito-title").textContent = "Pago simulado";
+    renderPayment();
+    payment.querySelector("[data-payment-scroll]").scrollTop = 0;
+    payment.querySelector("#pago-title").focus();
+  });
+  paymentBack.addEventListener("click", () => {
+    showCart();
+    checkout.focus();
+  });
+  paymentRadios.forEach((radio) => radio.addEventListener("change", renderPayment));
+  paymentConfirm.addEventListener("click", () => {
+    if (!cart.length || processing) return;
+    const method = selectedMethod();
+    setProcessing(true);
+    announce("Simulando el pago. No se realizará ningún cobro.");
+    paymentTimer = setTimeout(() => completePurchase(method), 650);
+  });
+
+  function completePurchase(method) {
+    if (!dialog.open || !cart.length) return;
     const receipt = dialog.querySelector("[data-cart-receipt]");
     receipt.replaceChildren();
     for (const item of cart) {
@@ -226,17 +313,31 @@
       receipt.append(row);
     }
     dialog.querySelector("[data-cart-receipt-total]").textContent = `${money(total())} MXN`;
+    dialog.querySelector("[data-payment-receipt-method]").textContent = method.terminacion
+      ? `Método simulado: ${method.nombre} ···· ${method.terminacion}` : "Método simulado: PayPal · Cuenta de demostración";
     cart = [];
+    setProcessing(false);
     update();
-    shopping.hidden = true;
+    shopping.hidden = payment.hidden = true;
     complete.hidden = false;
+    dialog.dataset.stage = "complete";
+    dialog.querySelector("#carrito-title").textContent = "Tu confirmación";
     document.querySelector("#compra-title").focus();
     announce("Compra simulada completada. No se realizó ningún cobro.");
-  });
+  }
 
   window.addEventListener("storage", (event) => {
     if (event.key !== storageKey && event.key !== null) return;
+    clearTimeout(paymentTimer);
     load();
+    setProcessing(false);
     render();
+    if (!payment.hidden) {
+      if (!cart.length) {
+        showCart();
+        dialog.querySelector("[data-cart-close]").focus();
+      }
+      announce("El carrito cambió en otra pestaña. Revisa el total antes de simular el pago.");
+    }
   });
 })();
