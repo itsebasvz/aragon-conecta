@@ -6,6 +6,8 @@ Memoria académica de tres encuentros de la Semana de Ingeniería: **Infraestruc
 
 La aplicación vive en [`pryecto_base`](pryecto_base). Usa Node.js 22, Express 5, EJS, Bootstrap 5.3.8 local, Sequelize 6 y MariaDB 11.4. Incluye reseñas, carruseles de fotos en AWS y Hello World, 29 diapositivas de Hello World, comentarios moderados y administración privada.
 
+Los carruseles avanzan cada seis segundos y permiten pausar o recorrer las fotos manualmente. El avance se detiene al interactuar, al quedar fuera de vista o al ocultar la pestaña. Con la preferencia de movimiento reducido comienzan pausados; sin JavaScript se pueden recorrer mediante desplazamiento.
+
 ## Arranque con Docker
 
 Requisitos: Node.js 22, npm y Docker con Compose. Desde esta carpeta:
