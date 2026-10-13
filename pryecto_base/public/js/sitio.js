@@ -18,6 +18,77 @@ if (navToggle && nav) {
   });
 }
 
+document.querySelectorAll("[data-photo-carousel]").forEach((carousel) => {
+  const track = carousel.querySelector("[data-photo-track]");
+  const slides = [...track.children];
+  const controls = carousel.querySelector("[data-photo-controls]");
+  if (!controls || slides.length < 2) return;
+
+  const previous = carousel.querySelector("[data-photo-previous]");
+  const next = carousel.querySelector("[data-photo-next]");
+  const status = carousel.querySelector("[data-photo-status]");
+  const thumbnails = [...carousel.querySelectorAll("[data-photo-index]")];
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let current = 0;
+  let scrollFrame;
+
+  function update() {
+    const step = slides[1].offsetLeft - slides[0].offsetLeft;
+    const index = Math.max(0, Math.min(slides.length - 1, Math.round(track.scrollLeft / step)));
+    current = index;
+    previous.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+    const message = `Foto ${index + 1} de ${slides.length}`;
+    if (status.textContent !== message) status.textContent = message;
+    thumbnails.forEach((button, i) => {
+      if (i === index) button.setAttribute("aria-current", "true");
+      else button.removeAttribute("aria-current");
+      slides[i].querySelector("[data-lightbox]").tabIndex = i === index ? 0 : -1;
+    });
+  }
+
+  function goTo(index) {
+    const target = Math.max(0, Math.min(slides.length - 1, index));
+    track.scrollTo({
+      left: slides[target].offsetLeft - slides[0].offsetLeft,
+      behavior: reducedMotion.matches ? "instant" : "smooth",
+    });
+  }
+
+  previous.addEventListener("click", () => goTo(current - 1));
+  next.addEventListener("click", () => goTo(current + 1));
+  thumbnails.forEach((button, index) => {
+    button.addEventListener("click", () => goTo(index));
+  });
+  track.addEventListener("keydown", (event) => {
+    const target = {
+      ArrowLeft: current - 1,
+      ArrowRight: current + 1,
+      Home: 0,
+      End: slides.length - 1,
+    }[event.key];
+    if (target === undefined) return;
+    event.preventDefault();
+    // El foco sigue a la foto cuando se recorre desde su enlace.
+    const followFocus = document.activeElement.matches("[data-lightbox]");
+    goTo(target);
+    if (followFocus) {
+      slides[Math.max(0, Math.min(slides.length - 1, target))]
+        .querySelector("[data-lightbox]").focus({ preventScroll: true });
+    }
+  });
+  track.addEventListener("scroll", () => {
+    cancelAnimationFrame(scrollFrame);
+    scrollFrame = requestAnimationFrame(update);
+  }, { passive: true });
+  new ResizeObserver(() => {
+    track.scrollTo({ left: slides[current].offsetLeft - slides[0].offsetLeft, behavior: "instant" });
+    update();
+  }).observe(track);
+  controls.hidden = false;
+  update();
+});
+
 const dialog = document.querySelector(".image-dialog");
 if (dialog && typeof dialog.showModal === "function") {
   const image = dialog.querySelector(".dialog-image");
