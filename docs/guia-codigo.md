@@ -35,6 +35,8 @@ Por ejemplo, el controlador puede pedir una conferencia por su `slug`, como `hel
 
 Las rutas de esta tabla parten de `aragon-conecta/`, la carpeta de la aplicación.
 
+La hoja [lectura.css](../aragon-conecta/public/css/lectura.css) reúne la escala de lectura para pantallas de escritorio (desde 1024 px). Usa tamaños relativos `rem`: al aumentar la letra del navegador, también aumenta el texto. Las tarjetas y el pago pueden reorganizar sus columnas para conservar espacio. Los tamaños de teléfono se mantienen en `sitio.css`.
+
 ## 3. Cómo funciona el carrito
 
 [carrito.js](../aragon-conecta/public/js/carrito.js) maneja tres pantallas dentro de la misma ventana: **carrito → pago simulado → confirmación**.
