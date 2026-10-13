@@ -1,3 +1,5 @@
+<%# Página compartida para errores como 404 o un formulario inválido. Recibe el código, el título y un mensaje para la persona visitante. -%>
 <%- include('partials/head', {description: 'Semana de Ingeniería 2027-1 · FES Aragón', path: typeof path === 'string' ? path : '', flash: null}) %>
+<%# Explica el problema y ofrece un enlace para continuar navegando. -%>
 <main class="site-container error-page" id="contenido"><span class="error-code"><%= status %></span><h1><%= title %></h1><p><%= message %></p><a class="btn btn-primary" href="/conferencias">Explorar conferencias <svg class="icon"><use href="#i-arrow"/></svg></a></main>
 <%- include('partials/footer') %>

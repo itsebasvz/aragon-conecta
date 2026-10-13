@@ -1,20 +1,30 @@
+<%# Detalle de una conferencia. Recibe conferencia, comentarios aprobados, errores y valores del formulario desde el controlador. -%>
 <%- include('partials/head', { flash: null }) %>
 <main id="contenido">
+<%# La ruta de navegación permite volver al catálogo. -%>
   <div class="site-container detail-breadcrumb"><nav aria-label="Ruta de navegación"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/">Inicio</a></li><li class="breadcrumb-item"><a href="/conferencias">Conferencias</a></li><li class="breadcrumb-item active" aria-current="page"><%= conferencia.contenido.corto %></li></ol></nav></div>
+<%# Muestra el título, la fotografía principal y el componente compartido para agregar boletos. -%>
   <section class="detail-hero site-container"><div><p class="eyebrow"><%= conferencia.categoria %></p><h1><%= conferencia.titulo %></h1><p class="page-lead"><%= conferencia.resumen %></p><div class="detail-state">Conferencias que conectan</div><%- include('partials/ticket-purchase', { slug: conferencia.slug }) %><a class="text-link" href="#comentarios">Compartir una reflexión <svg class="icon"><use href="#i-arrow"/></svg></a></div><figure><img src="<%= conferencia.contenido.imagen.src %>" width="<%= conferencia.contenido.imagen.width %>" height="<%= conferencia.contenido.imagen.height %>" alt="<%= conferencia.contenido.imagen.alt %>" fetchpriority="high"><figcaption><%= conferencia.contenido.imagen.caption %></figcaption></figure></section>
   <div class="site-container detail-layout section">
+<%# El artículo usa el contenido JSON guardado con la conferencia. -%>
     <article class="detail-article"><section><p class="eyebrow">El encuentro</p><h2>Una mirada a la conferencia</h2><p class="article-intro"><%= conferencia.contenido.introduccion %></p></section>
+<%# Sólo dibuja el programa cuando existe; AWS contiene varias intervenciones en un mismo encuentro. -%>
       <% if(conferencia.contenido.programa.length) { %><section class="article-section"><h2>Un encuentro, tres perspectivas</h2><p>Las intervenciones acercaron experiencias profesionales y proyectos a la comunidad universitaria.</p><div class="programme"><% conferencia.contenido.programa.forEach((bloque,i)=> { %><article><span class="programme-number"><%= String(i+1).padStart(2,'0') %></span><div><h3><%= bloque.titulo %></h3><p class="programme-speaker"><%= bloque.participantes %></p><p><%= bloque.texto %></p></div></article><% }) %></div></section><% } %>
+<%# Recorre los temas y aprendizajes, sin duplicar una plantilla para cada conferencia. -%>
       <section class="article-section"><h2>Temas que nos dejó el encuentro</h2><% for(const bloque of conferencia.contenido.secciones) { %><div class="topic-block"><h3><%= bloque.titulo %></h3><p><%= bloque.texto %></p></div><% } %></section>
       <section class="takeaways article-section"><p class="eyebrow">Para llevar a la práctica</p><h2>Aprendizajes principales</h2><ol><% for(const idea of conferencia.contenido.aprendizajes) { %><li><%= idea %></li><% } %></ol></section>
+<%# Los nombres y roles salen de la lista de participantes de esta conferencia. -%>
       <section class="article-section"><h2>Participantes</h2><div class="people-grid"><% for(const persona of conferencia.contenido.ponentes) { %><div class="person"><span class="person-initial" aria-hidden="true"><%= persona.nombre.replace('Dr. ','').charAt(0) %></span><div><h3><%= persona.nombre %></h3><p><%= persona.rol %></p></div></div><% } %></div></section>
       <p class="source-note"><strong>Fuente de la reseña:</strong> <%= conferencia.contenido.fuente %></p>
     </article>
+<%# Los datos no confirmados se omiten. La nota explica que las fechas pertenecen al evento original. -%>
     <aside class="event-sidebar" aria-label="Información del evento"><div class="sidebar-panel"><p class="eyebrow">Información de referencia</p><dl><dt>Periodo académico</dt><dd>2027-1</dd><% if(conferencia.fecha) { %><dt>Fecha</dt><dd><%= formatDate(conferencia.fecha) %></dd><% } %><% if(conferencia.horario) { %><dt>Horario</dt><dd><%= conferencia.horario %><small>Ciudad de México</small></dd><% } %><% if(conferencia.sede) { %><dt>Sede</dt><dd><%= conferencia.sede %></dd><% } %><dt>Comunidad</dt><dd><%= conferencia.contenido.organizador %></dd></dl><p class="event-reference-note">Fechas y materiales del evento original. Los boletos forman parte de una simulación académica.</p></div><div class="sidebar-note"><h2>Ingeniería que conecta</h2><p>Este proyecto reúne una selección de actividades de la Semana de Ingeniería de FES Aragón.</p><a class="text-link" href="/conferencias">Explorar otros encuentros <svg class="icon"><use href="#i-arrow"/></svg></a></div></aside>
   </div>
+<%# La franja de fotos y materiales aparece sólo si hay contenido para mostrar. -%>
   <% if (conferencia.contenido.fotos.length > 1 || conferencia.contenido.materiales.length) { %>
   <section class="gallery-band"><div class="site-container section"><% if (conferencia.contenido.fotos.length > 1) { %><p class="eyebrow">Registro del encuentro</p><h2 id="encuentro-fotos-title">Así se vivió</h2><%- include('partials/photo-carousel', { fotos: conferencia.contenido.fotos }) %><% } %><% if(conferencia.contenido.materiales.length) { %><div class="materials"><h2>Materiales del evento</h2><% for(const material of conferencia.contenido.materiales) { %><a class="material-link" href="<%= material.url %>"><div><h3><%= material.titulo %></h3><p><%= material.detalle %></p></div><svg class="icon"><use href="#i-open"/></svg></a><% } %></div><% } %><% if(conferencia.slug === 'hello-world') { %><p class="club-link"><a class="text-link" href="https://helloworld-unam.tech/">Visitar el sitio de Hello World <svg class="icon"><use href="#i-open"/></svg></a></p><% } %></div></section>
   <% } %>
+<%# Inserta las reflexiones y el formulario de participación mediante un componente compartido. -%>
   <%- include('partials/community') %>
 </main>
 <%- include('partials/footer') %>

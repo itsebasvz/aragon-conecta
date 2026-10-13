@@ -1,11 +1,16 @@
+<%# Ventana compartida del carrito. EJS entrega el catálogo escapado en data-cart-catalog; JavaScript usa ese dato para dibujar filas y calcular importes. -%>
 <dialog id="carrito-dialog" class="cart-dialog" data-cart-dialog data-cart-catalog="<%= JSON.stringify(catalogoBoletos) %>" aria-labelledby="carrito-title">
+<%# El título cambia según el paso y el botón de cerrar está disponible en toda la compra. -%>
   <header class="cart-header"><div><p class="eyebrow">Semana de Ingeniería</p><h2 id="carrito-title">Tus boletos</h2></div><button class="cart-close" type="button" data-cart-close aria-label="Cerrar carrito">×</button></header>
+<%# Carrito.js anuncia los cambios aquí para los lectores de pantalla. -%>
   <div class="visually-hidden" data-cart-dialog-live></div>
+<%# Primer paso: lista de boletos. Las filas se crean en JavaScript, por eso la lista comienza vacía. -%>
   <div class="cart-shopping" data-cart-shopping>
     <div class="cart-scroll">
       <div class="cart-empty" data-cart-empty><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg><h3>Tu próxima idea empieza aquí</h3><p>Elige una conferencia y agrega tus boletos al carrito.</p><a class="btn btn-outline-primary" href="/conferencias">Explorar conferencias</a></div>
       <ul class="cart-items" data-cart-items aria-label="Boletos en tu carrito"></ul>
     </div>
+<%# Total y acciones de la selección. El resumen queda separado de la lista que puede desplazarse. -%>
     <footer class="cart-summary">
       <button class="cart-clear" type="button" data-cart-clear disabled>Vaciar carrito</button>
       <div class="cart-total"><span>Total <small data-cart-units>0 boletos</small></span><strong data-cart-total>$0.00 <small>MXN</small></strong></div>
@@ -15,30 +20,38 @@
       <p class="cart-storage-note" data-cart-storage hidden>El carrito se conservará mientras permanezcas en esta página.</p>
     </footer>
   </div>
+<%# Segundo paso: elegir un método. Esta sección sólo aparece al continuar desde un carrito con boletos. -%>
   <section class="payment-screen" data-payment-screen hidden aria-labelledby="pago-title">
     <div class="payment-scroll" data-payment-scroll>
+<%# Indica qué paso de la compra está activo. -%>
     <ol class="payment-steps" aria-label="Pasos de la compra"><li><span aria-hidden="true">✓</span> Carrito</li><li aria-current="step"><span aria-hidden="true">2</span> Pago</li><li><span aria-hidden="true">3</span> Confirmación</li></ol>
     <div class="payment-intro"><span class="payment-demo-badge">Modo de prueba</span><h3 id="pago-title" tabindex="-1">Elige cómo quieres pagar</h3><p>Prueba la experiencia con datos ficticios. No se realizará ningún cobro.</p></div>
     <div class="payment-layout">
       <div class="payment-methods">
+<%# Los radios permiten elegir exactamente un método y recorrer las opciones con el teclado. -%>
         <fieldset class="payment-options"><legend>Método de pago</legend>
           <label class="payment-option"><input type="radio" name="metodo-pago" value="visa" checked><span class="payment-brand"><img src="/media/pagos/visa.png" width="64" height="22" alt=""></span><span class="payment-option-copy"><strong>Visa</strong><small>Tarjeta de demostración</small></span><span class="payment-option-check" aria-hidden="true">✓</span></label>
           <label class="payment-option"><input type="radio" name="metodo-pago" value="mastercard"><span class="payment-brand"><img src="/media/pagos/mastercard.svg" width="46" height="30" alt=""></span><span class="payment-option-copy"><strong>Mastercard</strong><small>Tarjeta de demostración</small></span><span class="payment-option-check" aria-hidden="true">✓</span></label>
           <label class="payment-option"><input type="radio" name="metodo-pago" value="paypal"><span class="payment-brand"><img src="/media/pagos/paypal.svg" width="28" height="32" alt=""></span><span class="payment-option-copy"><strong>PayPal</strong><small>Cuenta de demostración</small></span><span class="payment-option-check" aria-hidden="true">✓</span></label>
         </fieldset>
+<%# Tarjeta ficticia de ejemplo: no contiene campos para escribir datos de una tarjeta real. -%>
         <div class="payment-card-preview" data-payment-card>
           <div class="payment-card-top"><span>Tarjeta de prueba</span><svg class="icon" aria-hidden="true"><use href="#i-card"/></svg></div>
           <p class="payment-card-number" data-payment-number aria-label="Tarjeta ficticia terminada en 4242">•••• &nbsp;•••• &nbsp;•••• &nbsp;4242</p>
           <div class="payment-card-bottom"><div><span>Titular de ejemplo</span><strong>ARAGÓN CONECTA</strong></div><span class="payment-card-logo"><img data-payment-card-logo src="/media/pagos/visa.png" width="64" height="26" alt="Visa"></span></div>
         </div>
+<%# Con PayPal, la vista previa muestra una cuenta de ejemplo sin iniciar sesión en otro sitio. -%>
         <div class="payment-paypal-preview" data-payment-paypal hidden><img src="/media/pagos/paypal.svg" width="34" height="40" alt="PayPal"><strong>Cuenta de demostración</strong><span>demo@aragon.example</span><p>La simulación se completa aquí. No necesitas iniciar sesión en PayPal.</p></div>
         <p class="payment-example-note">Datos ficticios precargados. No necesitas escribir información bancaria.</p>
       </div>
+<%# El resumen se calcula con las cantidades actuales antes de confirmar. -%>
       <aside class="payment-order" aria-label="Resumen antes del pago"><p class="eyebrow">Tu selección</p><h4>Resumen de compra</h4><ul data-payment-items></ul><div class="payment-order-total"><span>Total</span><strong data-payment-total></strong></div><p>Todos los importes están en pesos mexicanos.</p></aside>
     </div>
     </div>
+<%# Volver conserva los boletos. Simular pago muestra una espera breve y después pasa a la confirmación. -%>
     <footer class="payment-footer"><button class="btn btn-outline-primary payment-back" type="button" data-payment-back><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>Volver al carrito</button><button class="btn btn-primary payment-confirm" type="button" data-payment-confirm><span data-payment-confirm-label>Simular pago</span><span class="payment-spinner" aria-hidden="true" hidden></span></button><p>No se guardan datos de pago ni se genera un cargo real.</p></footer>
   </section>
+<%# Último paso: resumen y método ficticio. El carrito ya se vació cuando aparece esta sección. -%>
   <section class="cart-complete" data-cart-complete hidden aria-labelledby="compra-title">
     <span class="cart-success-icon" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span>
     <p class="eyebrow">Todo listo</p><h3 id="compra-title" tabindex="-1">¡Compra simulada completada!</h3>
@@ -49,5 +62,6 @@
     <button class="btn btn-primary" type="button" data-cart-close>Seguir explorando</button>
   </section>
 </dialog>
+<%# Aviso breve de agregado y región para anunciar cambios cuando la ventana está cerrada. -%>
 <div class="cart-toast" data-cart-toast hidden aria-hidden="true"></div>
 <div class="visually-hidden" data-cart-live></div>

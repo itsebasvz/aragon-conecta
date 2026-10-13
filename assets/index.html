@@ -1,6 +1,9 @@
 <!doctype html>
+<!-- Catálogo auxiliar de los recursos originales. Se abre desde el disco; no forma parte de las rutas públicas de Express. -->
+
 <html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Assets institucionales · FES Aragón</title>
+<!-- Estilos sencillos para presentar las miniaturas y el buscador de recursos. -->
 <style>
 *{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,sans-serif;color:#182c46;background:#f4f6f8}
 header,main{max-width:1400px;margin:auto;padding:28px}header{border-top:6px solid #002f6c}
@@ -14,8 +17,10 @@ code{font-size:12px;overflow-wrap:anywhere}p{margin:8px 0}.note{font-size:13px;c
 </style><header><h1>Recursos institucionales · FES Aragón</h1>
 <p>Semana de Ingeniería 2027-1 · 52 archivos originales · 5.2 MB</p>
 <p>Firmas, iconos, banners, campus y recursos de ingeniería. <a href="README.md">Guía de uso</a> · <a href="fuentes.json">Fuentes y metadatos</a> · <a href="../docs/identidad-institucional.pdf">Manual de identidad</a></p>
+<!-- El buscador filtra los artículos que ya están en esta página, sin llamar a un servidor. -->
 <label for="search">Buscar por nombre o categoría<input id="search" type="search" placeholder="UNAM, logos, campus, computación…"></label>
-<p id="count" aria-live="polite"></p></header><main><article data-search="unambiente entre manos banners/fes-aragon/enlaces-interes4.jpg">
+<p id="count" aria-live="polite"></p></header><!-- Cada artículo guarda palabras de búsqueda en data-search, además de la miniatura y los créditos. -->
+<main><article data-search="unambiente entre manos banners/fes-aragon/enlaces-interes4.jpg">
       <a class="preview" href="banners/fes-aragon/enlaces-interes4.jpg"><img src="banners/fes-aragon/enlaces-interes4.jpg" alt="UNAMbiente entre manos" loading="lazy"></a>
       <h2>UNAMbiente entre manos</h2><code>banners/fes-aragon/enlaces-interes4.jpg</code><p>1500 × 1000 px · 473.1 KB</p>
       <p class="note">Banner original de un servicio o recurso de la facultad.</p>
@@ -379,9 +384,15 @@ code{font-size:12px;overflow-wrap:anywhere}p{margin:8px 0}.note{font-size:13px;c
       <a href="https://www.aragon.unam.mx/fes-aragon/public_html/img/nuestra_facultad/mapa_fes_aragon/mapa-fes-aragon.jpg" target="_blank" rel="noopener">Archivo original</a> ·
       <a href="https://www.aragon.unam.mx/fes-aragon/#!/nuestra-facultad/mapa-fes-aragon" target="_blank" rel="noopener">Página de origen</a>
     </article></main>
+<!-- El script compara el texto buscado con data-search y actualiza el número de recursos visibles. -->
 <script>
+// Busca el campo de texto y prepara la lista de tarjetas que se van a filtrar.
 const input=document.querySelector('#search');const cards=[...document.querySelectorAll('article')];
+// Quita acentos y convierte a minúsculas para que la búsqueda acepte Aragón y aragon como
+// equivalentes.
 const normalize=text=>text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+// Oculta las tarjetas que no coinciden y cuenta las que siguen visibles.
 function filter(){let count=0;const query=normalize(input.value);for(const card of cards){card.hidden=!normalize(card.dataset.search).includes(query);if(!card.hidden)count++}document.querySelector('#count').textContent=count+' recursos visibles'}
+// Vuelve a filtrar al escribir y muestra el conteo inicial al abrir el archivo.
 input.addEventListener('input',filter);filter();
 </script></html>

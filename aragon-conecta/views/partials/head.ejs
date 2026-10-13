@@ -1,5 +1,7 @@
+<%# Comienza el documento HTML y comparte los recursos y la navegación en todas las páginas. No cierra el documento: eso corresponde al pie. -%>
 <!doctype html>
 <html lang="es-MX">
+<%# Metadatos, fuente, Bootstrap y estilos propios. Los scripts se ejecutan después de que el navegador termine de leer el HTML. -%>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,6 +16,7 @@
   <script src="/js/carrito.js" defer></script>
 </head>
 <body>
+<%# Guarda los dibujos SVG de los iconos. Otras partes del HTML los reutilizan por su id, sin descargar un archivo por icono. -%>
 <svg class="icon-definitions" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
   <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 11h18m-14 4h2m4 0h2m-8 3h2"/></symbol>
@@ -25,7 +28,9 @@
   <symbol id="i-cart" viewBox="0 0 24 24"><path d="M3 3h2l3 12h11l2-9H6"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></symbol>
   <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 9h20M6 15h4"/></symbol>
 </defs></svg>
+<%# Este enlace permite saltar el encabezado al navegar con teclado. -%>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
+<%# Firmas institucionales y nombre del evento. Las imágenes conservan las proporciones originales. -%>
 <header class="institutional-header">
   <div class="site-container identity-row">
     <a href="https://www.unam.mx/" class="institution-logo"><img src="/media/logo-unam.svg" width="541" height="137" alt="Universidad Nacional Autónoma de México"></a>
@@ -34,17 +39,22 @@
     <div class="header-context"><span>Conferencias y boletos</span><strong>Semana de Ingeniería</strong><span>Semestre 2027-1</span></div>
   </div>
 </header>
+<%# El menú marca la página activa comparando la ruta actual. En móvil, sitio.js permite abrirlo y cerrarlo. -%>
 <nav class="site-nav" aria-label="Navegación principal">
   <div class="site-container nav-row">
     <span class="mobile-nav-label">Semana de Ingeniería</span>
     <button class="nav-toggle" type="button" aria-controls="nav-links" aria-expanded="false" hidden><svg class="icon"><use href="#i-menu"/></svg><span>Menú</span></button>
     <div class="nav-links" id="nav-links" data-open="false">
+<%# La lista concentra los enlaces del menú para no repetir el marcado de cada opción. -%>
     <% for (const item of [{href:'/', text:'Inicio'}, {href:'/conferencias',text:'Conferencias'}, {href:'/acerca',text:'Acerca del proyecto'}]) { const active = item.href === '/' ? path === '/' : path.startsWith(item.href); %>
       <a href="<%= item.href %>"<% if(active) { %> aria-current="page"<% } %>><%= item.text %></a>
     <% } %>
     </div>
+<%# El botón del carrito permanece oculto hasta que JavaScript prepara su ventana y recupera la selección. -%>
     <div class="nav-tools"><span class="nav-edition">FES Aragón <span aria-hidden="true">/</span> 2027-1</span><button class="cart-toggle" type="button" data-cart-toggle aria-haspopup="dialog" aria-controls="carrito-dialog" aria-label="Carrito, 0 boletos" hidden><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="cart-toggle-label">Carrito</span><span class="cart-count" data-cart-count aria-hidden="true">0</span></button></div>
   </div>
 </nav>
+<%# Si JavaScript está desactivado, explica qué partes del sitio se pueden seguir usando. -%>
 <noscript><p class="site-container cart-noscript">Puedes explorar las conferencias y compartir reflexiones. Para usar el carrito, activa JavaScript.</p></noscript>
+<%# Los avisos vienen de la sesión y sólo se muestran cuando hay un mensaje pendiente. -%>
 <% if (flash) { %><div class="site-container flash-wrap"><div class="alert alert-<%= flash.type %>" role="status"><%= flash.message %></div></div><% } %>

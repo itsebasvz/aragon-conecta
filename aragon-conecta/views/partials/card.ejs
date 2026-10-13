@@ -1,8 +1,12 @@
+<%# Tarjeta compartida por portada y catálogo. La variable c representa una conferencia de la lista. -%>
 <article class="event-card">
+<%# La imagen lleva al detalle. srcset permite que el navegador elija el tamaño adecuado para la pantalla. -%>
   <a class="card-image-link" href="/conferencias/<%= c.slug %>" tabindex="-1" aria-hidden="true"><img src="<%= c.contenido.imagen.thumb %>" srcset="<%= c.contenido.imagen.small %> 480w, <%= c.contenido.imagen.thumb %> 960w" sizes="(max-width: 767px) 100vw, 33vw" width="<%= c.contenido.imagen.width %>" height="<%= c.contenido.imagen.height %>" loading="lazy" alt=""></a>
+<%# El texto se escribe con la salida escapada de EJS para tratarlo como contenido y no como HTML. -%>
   <div class="event-card-body"><span class="category"><%= c.categoria %></span><h3><a href="/conferencias/<%= c.slug %>"><%= c.contenido.corto %></a></h3><p><%= c.resumen %></p>
     <div class="card-meta"><svg class="icon"><use href="#i-calendar"/></svg><span>Semana de Ingeniería · 2027-1</span></div>
     <div class="card-people"><%= c.slug === 'infraestructura-del-manana' ? 'Brenda Bravo · Sebastián Vázquez · Daniel Rodríguez · Carlos Sánchez' : c.slug === 'hello-world' ? 'Equipo Hello World · FES Aragón' : 'Dr. Omar Mendoza González' %></div>
+<%# Reutiliza el precio y el botón de boletos que también aparecen en el detalle. -%>
     <%- include('ticket-purchase', { slug: c.slug }) %>
     <a class="text-link card-action" href="/conferencias/<%= c.slug %>">Ver detalles<span class="visually-hidden">: <%= c.contenido.corto %></span><svg class="icon"><use href="#i-arrow"/></svg></a>
   </div>

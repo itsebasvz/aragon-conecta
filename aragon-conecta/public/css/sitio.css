@@ -1,3 +1,5 @@
+/* Estilos propios del sitio. Cada selector indica qué elemento se modifica; sus propiedades controlan tamaño, color, espacio y distribución. Las reglas posteriores pueden ajustar las anteriores. */
+/* Carga Poppins desde archivos locales. Los cuatro bloques corresponden a sus distintos grosores de letra. */
 @font-face {
   font-family: Poppins;
   src: url("/fonts/poppins-latin-400-normal.woff2") format("woff2");
@@ -22,6 +24,7 @@
   font-weight: 700;
   font-display: swap;
 }
+/* Variables compartidas: colores de Aragón y ajustes de Bootstrap. var(...) permite reutilizarlas en toda la hoja. */
 :root {
   --brand-primary: #002f6c;
   --brand-accent: #f2a900;
@@ -38,13 +41,16 @@
   --bs-border-color: #d9e0e8;
   --bs-border-radius: 0.5rem;
 }
+/* border-box hace que el ancho incluya bordes y relleno; facilita que los elementos quepan en su contenedor. */
 * {
   box-sizing: border-box;
 }
+/* El desplazamiento suave y su margen ayudan a llegar a una sección sin que el menú fijo cubra su título. */
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
 }
+/* Aspecto base de lectura: tipografía, tamaño, altura de línea y fondo. */
 body {
   margin: 0;
   font-family: Poppins, Arial, sans-serif;
@@ -100,6 +106,7 @@ textarea,
 summary {
   touch-action: manipulation;
 }
+/* El contorno visible indica qué control está seleccionado al navegar con el teclado. */
 :focus-visible {
   outline: 3px solid #2172c4;
   outline-offset: 4px;
@@ -110,6 +117,7 @@ a:focus-visible {
 [hidden] {
   display: none !important;
 }
+/* Centra el contenido y limita su ancho para que las líneas no sean demasiado largas. */
 .site-container {
   width: min(100% - 64px, 1280px);
   margin-inline: auto;
@@ -117,6 +125,7 @@ a:focus-visible {
 .section {
   padding-block: 72px;
 }
+/* Tamaño y trazo de los iconos SVG. Las definiciones se guardan ocultas y se reutilizan con use. */
 .icon {
   width: 21px;
   height: 21px;
@@ -134,6 +143,7 @@ a:focus-visible {
   height: 0;
   overflow: hidden;
 }
+/* Texto pequeño que introduce una sección. Los enlaces y botones que siguen comparten un estilo consistente. */
 .eyebrow {
   font-size: 11px;
   font-weight: 600;
@@ -154,6 +164,7 @@ a:focus-visible {
 .text-link:hover {
   text-decoration: underline;
 }
+/* Personaliza los botones de Bootstrap con los colores institucionales y un tamaño cómodo para pulsarlos. */
 .btn {
   display: inline-flex;
   justify-content: center;
@@ -184,6 +195,7 @@ a:focus-visible {
   width: 18px;
   height: 18px;
 }
+/* Este enlace aparece al recibir foco y permite saltar directamente al contenido con el teclado. */
 .skip-link {
   position: fixed;
   top: 8px;
@@ -197,6 +209,7 @@ a:focus-visible {
 .skip-link:focus {
   transform: translateY(0);
 }
+/* Organiza los logotipos y el nombre del evento dentro del encabezado institucional. */
 .identity-row {
   display: flex;
   align-items: center;
@@ -233,6 +246,7 @@ a:focus-visible {
   font-weight: 600;
   color: var(--brand-primary);
 }
+/* La navegación permanece arriba al desplazarse. z-index coloca el menú sobre el contenido. */
 .site-nav {
   position: sticky;
   top: 0;
@@ -247,6 +261,7 @@ a:focus-visible {
   align-items: center;
   min-height: 51px;
 }
+/* En escritorio, los enlaces van en una fila. Más adelante se adaptan al menú de móvil. */
 .nav-links {
   display: flex;
   gap: 36px;
@@ -290,9 +305,11 @@ a:focus-visible {
 .site-footer :focus-visible {
   outline-color: #f2a900;
 }
+/* Espacio para avisos temporales, como una confirmación después de enviar un formulario. */
 .flash-wrap {
   padding-top: 24px;
 }
+/* Presentación principal: una columna de texto y otra de fotografía; en móvil se apilan. */
 .home-hero {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
@@ -334,6 +351,7 @@ a:focus-visible {
   line-height: 1.85;
   margin-bottom: 24px;
 }
+/* La imagen de portada conserva sus proporciones y lleva una etiqueta institucional encima. */
 .hero-photo {
   position: relative;
   margin: 0;
@@ -380,6 +398,7 @@ a:focus-visible {
   font-size: 19px;
   font-weight: 500;
 }
+/* Franja que resume los temas del encuentro entre la portada y el catálogo. */
 .edition-band {
   border-block: 1px solid var(--border);
   background: #fafbfd;
@@ -411,6 +430,7 @@ a:focus-visible {
   margin-left: auto;
   font-size: 10px;
 }
+/* Alinea el título de cada sección con su enlace para consultar más información. */
 .section-heading {
   display: flex;
   justify-content: space-between;
@@ -432,11 +452,13 @@ a:focus-visible {
 .section-heading > .text-link {
   flex-shrink: 0;
 }
+/* Grid reparte las tarjetas de conferencias en tres columnas de ancho parecido. */
 .event-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
 }
+/* Cada tarjeta mantiene imagen, texto, precio y acciones dentro del mismo borde. */
 .event-card {
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -463,6 +485,7 @@ a:focus-visible {
 .event-card:hover .card-image-link img {
   transform: scale(1.025);
 }
+/* Flex en columna ayuda a que los botones de las tarjetas queden alineados aunque cambie la longitud del texto. */
 .event-card-body {
   padding: 24px;
   display: flex;
@@ -532,6 +555,7 @@ a:focus-visible {
   width: 18px;
   height: 18px;
 }
+/* Presenta las tres ideas destacadas en bloques separados del catálogo. */
 .learning-section {
   background: var(--pale);
   border-block: 1px solid #e5ebf3;
@@ -570,6 +594,7 @@ a:focus-visible {
 .insight-grid .text-link {
   font-size: 11px;
 }
+/* Estilo común de fotografías y del acceso para ampliarlas. */
 .photo-figure {
   margin: 0;
   min-width: 0;
@@ -616,6 +641,7 @@ figcaption {
   color: var(--muted);
   margin-top: 10px;
 }
+/* Invitación a participar con una reflexión; separa icono, explicación y botón. */
 .conversation-section {
   border: 1px solid var(--border);
   background: #f8fafc;
@@ -659,6 +685,7 @@ figcaption {
   width: 26px;
   height: 26px;
 }
+/* Pie institucional con enlaces y autoría del proyecto. */
 .site-footer {
   background: var(--deep);
   color: #dce5f1;
@@ -725,6 +752,7 @@ figcaption {
 .footer-bottom span {
   padding-inline: 6px;
 }
+/* Encabezados de las páginas interiores: título, descripción y ruta de navegación. */
 .page-heading {
   padding-block: 28px 40px;
   background: var(--pale);
@@ -760,6 +788,7 @@ figcaption {
 .breadcrumb-item.active {
   color: var(--muted);
 }
+/* Introducción al catálogo y sus notas de contexto. */
 .catalogue-intro {
   display: flex;
   justify-content: space-between;
@@ -802,6 +831,7 @@ figcaption {
 .detail-breadcrumb {
   padding-block: 24px;
 }
+/* Presentación de una conferencia concreta, junto con su fotografía y acceso a boletos. */
 .detail-hero {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
@@ -832,6 +862,7 @@ figcaption {
   color: var(--muted);
   margin-block: 20px 10px;
 }
+/* Separa el artículo principal y la columna lateral de información. */
 .detail-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 295px;
@@ -864,6 +895,7 @@ figcaption {
 .topic-block {
   margin-block: 26px;
 }
+/* Los bloques numerados explican las distintas intervenciones del encuentro AWS. */
 .programme {
   border-bottom: 1px solid var(--border);
 }
@@ -888,6 +920,7 @@ figcaption {
   font-weight: 500;
   margin-bottom: 12px;
 }
+/* Destaca los aprendizajes principales dentro del artículo. */
 .takeaways {
   background: var(--pale);
   border-left: 3px solid var(--brand-accent);
@@ -943,6 +976,7 @@ figcaption {
   line-height: 1.7;
   margin-bottom: 0;
 }
+/* La columna lateral contiene datos de referencia y enlaces a otras conferencias. */
 .sidebar-panel {
   padding: 26px;
   background: var(--pale);
@@ -996,10 +1030,12 @@ figcaption {
 .sidebar-note .text-link {
   font-size: 11px;
 }
+/* Franja de fotografías y materiales. El carrusel usa desplazamiento horizontal con ajuste a cada foto. */
 .gallery-band {
   background: #f8fafc;
   border-block: 1px solid #e3eaf1;
 }
+/* Los controles de este bloque se habilitan con JavaScript; sin él, la tira de fotos se recorre desplazándola. */
 .photo-carousel {
   margin-top: 28px;
 }
@@ -1135,6 +1171,7 @@ figcaption {
 .source-note strong {
   font-weight: 500;
 }
+/* Distribuye las reflexiones publicadas y el formulario para escribir una nueva. */
 .comments-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1275,6 +1312,7 @@ figcaption {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+/* Separa la explicación del proyecto y su ficha académica. */
 .about-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
@@ -1302,6 +1340,7 @@ figcaption {
 .prose .editorial-note {
   font-size: 12px;
 }
+/* Distribuye las diapositivas de Hello World con una imagen y número por elemento. */
 .slides-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1325,6 +1364,7 @@ figcaption {
   font-size: 13px;
   color: var(--muted);
 }
+/* Visor de fotografías ampliadas. backdrop oscurece la página que queda detrás. */
 .image-dialog {
   border: none;
   border-radius: 8px;
@@ -1394,6 +1434,7 @@ figcaption {
   max-width: 620px;
   margin: 0 auto 28px;
 }
+/* Diseño de la página de acceso a administración. */
 .login-section {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
@@ -1452,6 +1493,7 @@ figcaption {
   display: grid;
   gap: 20px;
 }
+/* Tarjetas privadas para revisar comentarios y decidir si se publican. */
 .moderation-card {
   border: 1px solid var(--border);
   padding: 26px;
@@ -1541,6 +1583,7 @@ figcaption {
 .dialog-open {
   overflow: hidden;
 }
+/* Los ajustes de esta sección afinan los tamaños de lectura sin repetir toda la definición de cada componente. */
 /* Tamaños de lectura y metadatos conforme al sistema institucional. */
 body {
   font-size: 16px;
@@ -1682,6 +1725,7 @@ figcaption {
 .comment strong {
   font-size: 14px;
 }
+/* En pantallas muy anchas aumenta el espacio útil de los componentes indicados. */
 @media (min-width: 1500px) {
   .home-hero {
     gap: 80px;
@@ -1691,6 +1735,7 @@ figcaption {
     height: 430px;
   }
 }
+/* Ajustes para pantallas intermedias: reduce espacios y adapta los componentes que ya no caben cómodamente. */
 @media (max-width: 1100px) {
   .header-context {
     display: none;
@@ -1760,6 +1805,7 @@ figcaption {
     gap: 40px;
   }
 }
+/* En móvil, las columnas se apilan y la navegación se convierte en un menú desplegable. */
 @media (max-width: 767px) {
   body {
     font-size: 15px;
@@ -2268,6 +2314,7 @@ figcaption {
     font-size: 11px;
   }
 }
+/* Si la persona pide menos movimiento, elimina animaciones y desplazamientos suaves. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -2282,6 +2329,7 @@ figcaption {
     transform: none;
   }
 }
+/* En modo de alto contraste, conserva bordes y estados que ayudan a distinguir los controles. */
 @media (forced-colors: active) {
   .site-nav,
   .site-footer,
@@ -2342,6 +2390,7 @@ figcaption {
   border-color: #9cabbb;
   transform: translateY(-2px);
 }
+/* Iniciales, nombre y fecha comparten el mismo diseño en comentarios públicos y en moderación. */
 .comment-author {
   display: flex;
   align-items: center;
@@ -2500,6 +2549,7 @@ figcaption {
 .admin-workspace {
   padding-top: 36px;
 }
+/* Las tarjetas de resumen muestran contadores por estado y funcionan como filtros del panel. */
 .admin-summary {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2762,12 +2812,15 @@ figcaption {
   }
 }
 
+/* A partir de aquí se definen la compra simulada y sus ventanas, usando los mismos colores del resto del sitio. */
 /* Boletos y carrito de compra simulada. */
+/* Agrupa la edición y el botón del carrito en el extremo derecho de la navegación. */
 .nav-tools { display: flex; align-items: center; gap: 24px; margin-left: auto; }
 .cart-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 6px 12px; margin-block: 6px; border: 1px solid #7593b9; border-radius: 6px; color: white; background: transparent; font-size: 12px; }
 .cart-toggle:hover { background: #154a86; }
 .cart-count { display: grid; place-items: center; min-width: 24px; min-height: 24px; padding-inline: 5px; border-radius: 20px; background: var(--brand-accent); color: var(--deep); font-weight: 600; font-variant-numeric: tabular-nums; }
 .cart-noscript { margin-block: 16px; font-size: 12px; color: var(--muted); }
+/* Presenta el precio por persona y el botón para agregar boletos. */
 .ticket-purchase { margin-block: 24px 8px; }
 .ticket-price > span { color: var(--muted); font-size: 11px; }
 .ticket-price p { display: flex; align-items: baseline; gap: 6px; margin: 0 0 14px; }
@@ -2779,6 +2832,7 @@ figcaption {
 .detail-hero .ticket-purchase { max-width: 320px; margin-bottom: 12px; }
 .event-reference-note { margin: 20px 0 0; color: var(--muted); font-size: 11px; }
 body.cart-open { overflow: hidden; }
+/* Panel lateral del carrito. dvh adapta su altura a la parte visible de la pantalla, también en móvil. */
 .cart-dialog { position: fixed; inset: 0 0 0 auto; width: min(100%, 440px); height: 100%; height: 100dvh; max-height: none; max-width: 100%; margin: 0; padding: 0; border: 0; background: white; color: var(--ink); box-shadow: -16px 0 60px #0b234226; }
 .cart-dialog[open] { display: flex; flex-direction: column; }
 .cart-dialog::backdrop { background: #0b234280; }
@@ -2787,6 +2841,7 @@ body.cart-open { overflow: hidden; }
 .cart-header h2 { font-size: 26px; margin: 0; }
 .cart-close { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; background: white; color: var(--brand-primary); font-size: 27px; }
 .cart-close:hover { background: var(--pale); }
+/* La lista puede desplazarse y el resumen queda disponible al pie del panel. */
 .cart-shopping { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .cart-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 24px; }
 .cart-empty { text-align: center; padding: 40px 0; }
@@ -2794,6 +2849,7 @@ body.cart-open { overflow: hidden; }
 .cart-empty h3 { font-size: 20px; }
 .cart-empty p { color: var(--muted); font-size: 13px; }
 .cart-items { padding: 0; margin: 0; list-style: none; }
+/* Cada fila agrupa imagen, título, cantidad, eliminación y subtotal. */
 .cart-item { display: flex; align-items: flex-start; gap: 16px; padding-block: 24px; border-bottom: 1px solid var(--border); }
 .cart-item:last-child { border-bottom: 0; }
 .cart-item-image { width: 72px; height: 80px; flex-shrink: 0; border-radius: 6px; object-fit: cover; }
@@ -2809,6 +2865,7 @@ body.cart-open { overflow: hidden; }
 .cart-quantity-value { min-width: 25px; text-align: center; font-size: 13px; font-variant-numeric: tabular-nums; }
 .cart-item-remove { font-size: 11px; text-decoration: underline; color: var(--muted); }
 .cart-subtotal { margin: 12px 0 0; font-size: 14px; color: var(--brand-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
+/* Total y acciones principales del carrito. Vaciar y continuar sólo se habilitan cuando hay boletos. */
 .cart-summary { flex-shrink: 0; padding: 16px 24px 20px; border-top: 1px solid var(--border); background: var(--pale); }
 .cart-clear, .cart-continue { min-height: 44px; border: 0; padding: 8px 0; background: transparent; color: var(--brand-primary); font-size: 12px; text-decoration: underline; }
 .cart-clear:disabled { display: none; }
@@ -2821,6 +2878,7 @@ body.cart-open { overflow: hidden; }
 .cart-summary > .btn { width: 100%; gap: 8px; }
 .cart-continue { display: block; margin: 4px auto 0; }
 .cart-storage-note { margin: 8px 0 0; font-size: 11px; color: var(--muted); }
+/* Pantalla final con el resumen de la compra ficticia. */
 .cart-complete { padding: 28px 24px; overflow-y: auto; }
 .cart-success-icon { display: grid; place-items: center; width: 56px; height: 56px; background: #e5f2ec; color: #176442; border-radius: 50%; margin-bottom: 24px; }
 .cart-success-icon .icon { width: 28px; height: 28px; }
@@ -2833,6 +2891,7 @@ body.cart-open { overflow: hidden; }
 .cart-complete .cart-total { align-items: flex-start; }
 .cart-complete .cart-total strong { font-size: 20px; }
 .cart-complete > .btn { width: 100%; margin-top: 16px; }
+/* Aviso breve al agregar boletos, separado de la ventana para no interrumpir la navegación. */
 .cart-toast { position: fixed; bottom: 24px; right: 24px; z-index: 50; max-width: min(420px, calc(100% - 32px)); background: var(--deep); color: white; padding: 16px 20px; border-radius: 8px; box-shadow: 0 6px 24px #0b234226; font-size: 13px; }
 .cart-toggle[hidden], .cart-shopping[hidden], .cart-complete[hidden], .cart-empty[hidden], .cart-items[hidden], .cart-storage-note[hidden], .cart-toast[hidden] { display: none; }
 @media (max-width: 1100px) {
@@ -2857,8 +2916,10 @@ body.cart-open { overflow: hidden; }
   .cart-total strong { font-size: 20px; }
 }
 
+/* El pago usa un panel más ancho en escritorio y una sola columna en móvil. */
 /* Paso de pago ficticio: opciones de marca y resumen antes de confirmar. */
 .cart-dialog[data-stage="payment"] { width: min(100%, 760px); }
+/* El contenido se desplaza dentro del panel; el pie con los botones de pago permanece visible. */
 .payment-screen { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
 .payment-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px 28px; }
 .payment-steps { display: flex; align-items: center; justify-content: space-between; list-style: none; padding: 0 0 20px; margin: 0 0 24px; border-bottom: 1px solid var(--border); gap: 8px; }
@@ -2873,9 +2934,11 @@ body.cart-open { overflow: hidden; }
 .payment-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 24px; align-items: start; }
 .payment-options { border: 0; padding: 0; margin: 0 0 20px; min-width: 0; }
 .payment-options legend { float: none; font-size: 12px; font-weight: 500; margin: 0 0 12px; color: var(--ink); }
+/* Cada etiqueta es una opción completa que se puede pulsar para elegir el método de pago. */
 .payment-option { position: relative; display: flex; align-items: center; gap: 12px; min-height: 78px; padding: 14px 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: border-color .15s, background .15s; }
 .payment-option:last-child { margin-bottom: 0; }
 .payment-option:hover { border-color: #8099ba; }
+/* has permite destacar la tarjeta visual que contiene el botón de opción seleccionado. */
 .payment-option:has(input:checked) { background: #f1f5fa; border-color: var(--brand-primary); box-shadow: inset 0 0 0 1px var(--brand-primary); }
 .payment-option:has(input:focus-visible) { outline: 3px solid #7399d0; outline-offset: 3px; }
 .payment-option:has(input:disabled) { cursor: wait; }
@@ -2887,6 +2950,7 @@ body.cart-open { overflow: hidden; }
 .payment-option-copy small { font-size: 10px; color: var(--muted); margin-top: 2px; }
 .payment-option-check { display: grid; place-items: center; width: 19px; height: 19px; border-radius: 50%; color: transparent; border: 1px solid #98a8bd; font-size: 11px; flex-shrink: 0; }
 .payment-option:has(input:checked) .payment-option-check { background: var(--brand-primary); color: white; border-color: var(--brand-primary); }
+/* Vista decorativa de una tarjeta ficticia: no contiene campos donde escribir datos bancarios. */
 .payment-card-preview { padding: 20px; border-radius: 12px; background: linear-gradient(130deg, #002f6c, #0b2342); color: white; }
 .payment-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 .payment-card-top > span { font-size: 10px; color: #dce6f5; }
@@ -2899,11 +2963,13 @@ body.cart-open { overflow: hidden; }
 .payment-card-logo { display: grid; place-items: center; width: 60px; height: 32px; background: white; border-radius: 4px; padding: 7px; }
 .payment-card-logo img { width: 100%; height: 100%; object-fit: contain; }
 .payment-example-note { margin: 12px 0 0; font-size: 10px; color: var(--muted); }
+/* Con PayPal se muestra una cuenta de ejemplo en lugar de una tarjeta. */
 .payment-paypal-preview { display: flex; flex-direction: column; align-items: center; padding: 22px 16px; min-height: 196px; border: 1px solid #d5e8fa; border-radius: 12px; background: #f1f8fe; text-align: center; }
 .payment-paypal-preview > img { margin-bottom: 14px; }
 .payment-paypal-preview > strong { font-size: 13px; color: var(--brand-primary); font-weight: 500; }
 .payment-paypal-preview > span { font-size: 12px; color: var(--muted); margin-top: 4px; }
 .payment-paypal-preview p { margin: 14px 0 0; font-size: 10px; color: var(--muted); max-width: 230px; }
+/* Resumen de conferencias y total antes de confirmar la simulación. */
 .payment-order { background: var(--pale); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
 .payment-order .eyebrow { font-size: 9px; margin-bottom: 10px; }
 .payment-order h4 { font-size: 17px; margin-bottom: 20px; }
@@ -2916,16 +2982,19 @@ body.cart-open { overflow: hidden; }
 .payment-order-total > span { font-size: 13px; }
 .payment-order-total strong { color: var(--brand-primary); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .payment-order > p:last-child { font-size: 10px; color: var(--muted); margin: 10px 0 0; }
+/* Los botones permanecen fuera del área desplazable para poder volver o confirmar en cualquier momento. */
 .payment-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px 28px; margin: 0; flex-shrink: 0; border-top: 1px solid var(--border); background: white; }
 .payment-footer .payment-back { font-size: 11px; padding-inline: 12px; gap: 8px; transition: border-color .15s; }
 .payment-back .icon { transform: rotate(180deg); }
 .payment-confirm { flex: 1; font-size: 12px; gap: 10px; }
 .payment-confirm.is-paypal { --bs-btn-bg: #ffc439; --bs-btn-border-color: #ffc439; --bs-btn-hover-bg: #edb72f; --bs-btn-hover-border-color: #edb72f; --bs-btn-color: #102a52; --bs-btn-hover-color: #102a52; --bs-btn-disabled-bg: #ffc439; --bs-btn-disabled-border-color: #ffc439; --bs-btn-disabled-color: #102a52; }
 .payment-footer > p { flex: 0 0 100%; font-size: 10px; color: var(--muted); text-align: center; margin: 0; }
+/* La rueda representa la espera ficticia del pago; la preferencia de movimiento reducido también se aplica aquí. */
 .payment-spinner { width: 16px; height: 16px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: payment-spin .65s linear infinite; flex-shrink: 0; }
 @keyframes payment-spin { to { transform: rotate(360deg); } }
 .payment-receipt-method { padding: 10px 12px; border-radius: 6px; background: var(--pale); border: 1px solid var(--border); font-size: 11px !important; }
 .payment-screen[hidden], .payment-card-preview[hidden], .payment-paypal-preview[hidden], .payment-spinner[hidden] { display: none; }
+/* En pantallas pequeñas, el resumen pasa debajo de los métodos y los botones ocupan el ancho disponible. */
 @media (max-width: 599px) {
   .payment-scroll { padding: 20px; }
   .payment-layout { grid-template-columns: 1fr; gap: 24px; }

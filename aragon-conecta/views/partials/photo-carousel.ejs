@@ -1,13 +1,17 @@
+<%# Colección de fotos del encuentro. El HTML permite desplazarse sin JavaScript; sitio.js agrega avance automático y controles. -%>
 <div class="photo-carousel" data-photo-carousel role="region" aria-roledescription="carrusel" aria-labelledby="encuentro-fotos-title">
   <div class="photo-carousel-track" id="encuentro-fotos" data-photo-track tabindex="0" role="group" aria-label="Fotografías del encuentro">
+<%# Crea una diapositiva por foto y le asigna su posición dentro de la colección. -%>
     <% fotos.forEach((photo, index) => { %>
       <div class="photo-carousel-slide" role="group" aria-roledescription="diapositiva" aria-label="<%= index + 1 %> de <%= fotos.length %>">
         <%- include('photo', { photo }) %>
       </div>
     <% }) %>
   </div>
+<%# Las flechas y la pausa sólo tienen sentido cuando existe más de una foto. -%>
   <% if (fotos.length > 1) { %>
     <div class="photo-carousel-controls" data-photo-controls hidden>
+<%# El contador permite saber qué foto se está mostrando. JavaScript ajusta cuándo se anuncia. -%>
       <p class="photo-carousel-status" data-photo-status role="status" aria-live="off" aria-atomic="true">Foto 1 de <%= fotos.length %></p>
       <div class="photo-carousel-navigation">
         <button type="button" class="photo-carousel-pause" data-photo-pause aria-label="Pausar carrusel" aria-controls="encuentro-fotos">Pausar</button>
