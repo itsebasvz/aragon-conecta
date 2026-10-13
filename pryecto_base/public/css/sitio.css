@@ -197,19 +197,6 @@ a:focus-visible {
 .skip-link:focus {
   transform: translateY(0);
 }
-.university-strip {
-  background: var(--pale);
-  border-bottom: 1px solid #e7ebf1;
-  font-size: 10px;
-  letter-spacing: 0.03em;
-  color: var(--muted);
-}
-.university-strip .site-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-block: 8px;
-}
 .identity-row {
   display: flex;
   align-items: center;
@@ -225,6 +212,7 @@ a:focus-visible {
   display: block;
   width: 100%;
   height: auto;
+  filter: brightness(0);
 }
 .identity-divider {
   width: 1px;
@@ -346,19 +334,6 @@ a:focus-visible {
   color: var(--muted);
   line-height: 1.85;
   margin-bottom: 24px;
-}
-.hero-context {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 28px;
-  font-size: 10px;
-  color: var(--muted);
-}
-.small-rule {
-  width: 24px;
-  height: 1px;
-  background: #9cabbb;
 }
 .hero-photo {
   position: relative;
@@ -1555,9 +1530,6 @@ body {
 .hero-description {
   font-size: 15px;
 }
-.hero-context {
-  font-size: 12px;
-}
 .hero-photo > figcaption {
   font-size: 12px;
 }
@@ -1784,16 +1756,6 @@ figcaption {
   .section {
     padding-block: 44px;
   }
-  .university-strip .site-container {
-    justify-content: center;
-    padding-block: 7px;
-  }
-  .university-strip {
-    font-size: 8px;
-  }
-  .strip-secondary {
-    display: none;
-  }
   .identity-row {
     min-height: 82px;
     gap: 15px;
@@ -1878,10 +1840,6 @@ figcaption {
   .hero-description {
     font-size: 13px;
     max-width: 520px;
-  }
-  .hero-context {
-    margin-top: 22px;
-    font-size: 9px;
   }
   .hero-photo {
     padding-top: 0;
@@ -2332,7 +2290,6 @@ figcaption {
   .card-action {
     font-size: 13px;
   }
-  .hero-context,
   .hero-photo > figcaption {
     font-size: 11px;
   }
