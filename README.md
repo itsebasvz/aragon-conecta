@@ -32,7 +32,7 @@ Se presentan tres encuentros del periodo académico 2027-1, celebrados en 2026:
 
 Cada conferencia reúne detalles, participantes, aprendizajes y un botón para agregar boletos al carrito. AWS y Hello World incluyen carruseles fotográficos; Hello World también permite consultar su presentación. Los visitantes pueden enviar reflexiones, que se publican después de su aprobación en el panel de administración.
 
-Los precios de demostración son **$250 MXN para AWS**, **$150 MXN para el Dr. Omar** y **$100 MXN para Hello World**. El carrito permite ajustar cantidades, eliminar conferencias, vaciar la selección y confirmar una compra simulada con resumen del total. No realiza cobros ni reservas reales.
+Los precios de demostración son **$250 MXN para AWS**, **$150 MXN para el Dr. Omar** y **$100 MXN para Hello World**. El carrito permite ajustar cantidades, eliminar conferencias, vaciar la selección y continuar a un pago simulado con Visa, Mastercard o PayPal antes de confirmar la compra. No realiza cobros ni reservas reales.
 
 El carrito se conserva en el navegador al cambiar de página o recargar. Las fechas, fotografías y materiales se mantienen como referencia de los encuentros originales.
 
@@ -94,7 +94,7 @@ DESIGN.md          Criterios de diseño de la interfaz
 
 ## 6. Verificación del proyecto
 
-Para revisar la compra, agrega boletos desde la portada, el catálogo o el detalle de una conferencia. Abre el carrito desde la navegación, modifica las cantidades y confirma la compra simulada. Verás el resumen y el carrito quedará vacío. Este flujo utiliza JavaScript y almacenamiento local; no requiere registro ni guarda pedidos en MariaDB.
+Para revisar la compra, agrega boletos desde la portada, el catálogo o el detalle de una conferencia. Abre el carrito desde la navegación, modifica las cantidades y pulsa “Continuar al pago”. Elige Visa, Mastercard o PayPal y confirma con los datos ficticios precargados. Verás el resumen y el carrito quedará vacío. Este flujo utiliza JavaScript y almacenamiento local; no requiere registro ni guarda pedidos en MariaDB.
 
 Para revisar el CRUD de comentarios, abre una conferencia y envía una reflexión. Después, ingresa al panel, localiza el envío y apruébalo. Al recargar la conferencia, el comentario aparecerá públicamente. Desde el panel también puedes rechazarlo, devolverlo a pendientes o eliminarlo con confirmación.
 

@@ -47,3 +47,16 @@ El [portal de origen](https://www.aragon.unam.mx/fes-aragon/#!/inicio) declara u
 Atribución sugerida para los créditos del proyecto:
 
 > Imágenes y recursos institucionales: Universidad Nacional Autónoma de México, Facultad de Estudios Superiores Aragón. Fuente: https://www.aragon.unam.mx/fes-aragon/ . Consultado el 12 de octubre de 2026.
+
+
+## Logotipos del pago simulado
+
+Los siguientes archivos se descargaron para el selector de métodos del proyecto académico y se sirven localmente desde `aragon-conecta/public/media/pagos/`. Se conservan sus colores y proporciones. Identifican opciones de demostración: no existe integración con las plataformas ni se realizan cobros.
+
+| Archivo | Titular y fuente |
+| --- | --- |
+| `visa.png` | Visa. [Kit oficial de medios](https://corporate.visa.com/en/about-visa/mediakits.html); [PNG original](https://corporate.visa.com/content/dam/VCOM/corporate/about-visa/images/visa-brandmark-blue-1960x622.png). |
+| `paypal.svg` | PayPal. Recurso enlazado desde su [página de Checkout](https://www.paypal.com/us/business/accept-payments/checkout); [SVG original](https://www.paypalobjects.com/marketing/web/logos/paypal-mark-color_new.svg). |
+| `mastercard.svg` | Mastercard Incorporated. Símbolo de 2019, descargado de [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mastercard_2019_logo.svg); [SVG original](https://upload.wikimedia.org/wikipedia/commons/a/a4/Mastercard_2019_logo.svg). La ficha enlaza al centro de marca de Mastercard y clasifica el diseño como `PD-textlogo`. |
+
+Estos logotipos y sus marcas pertenecen a sus respectivos titulares y quedan fuera de la licencia MIT del código. Fecha de consulta y descarga: 12 de octubre de 2026.
