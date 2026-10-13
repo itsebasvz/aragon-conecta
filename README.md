@@ -2,7 +2,7 @@
 
 **Semana de Ingeniería 2027-1 · FES Aragón, UNAM**
 
-Sitio web para difundir tres conferencias de la Semana de Ingeniería, compartir sus aprendizajes y abrir un espacio de reflexión para la comunidad universitaria.
+Aplicación web con catálogo de conferencias y compra simulada de boletos para la Semana de Ingeniería. Permite elegir encuentros, agregar boletos a un carrito y compartir reflexiones con la comunidad universitaria.
 
 ## 1. Datos académicos
 
@@ -22,7 +22,7 @@ Sitio web para difundir tres conferencias de la Semana de Ingeniería, compartir
 
 ## 2. Objetivo y contenido
 
-El proyecto aplica las tecnologías estudiadas durante el semestre para construir una aplicación web con contenido almacenado en una base de datos, vistas dinámicas y formularios. Su diseño toma como referencia la identidad institucional de la FES Aragón.
+El proyecto aplica las tecnologías estudiadas durante el semestre para construir una aplicación web con catálogo, carrito de compra, contenido almacenado en una base de datos, vistas dinámicas y formularios. Su diseño toma como referencia la identidad institucional de la FES Aragón.
 
 Se presentan tres encuentros del periodo académico 2027-1, celebrados en 2026:
 
@@ -30,7 +30,11 @@ Se presentan tres encuentros del periodo académico 2027-1, celebrados en 2026:
 - **Sostenibilidad en los datos:** software, preservación de información y soberanía tecnológica.
 - **De Hello World a proyectos con impacto real:** aprendizaje, proyectos y participación en la comunidad estudiantil.
 
-Cada conferencia reúne una reseña, participantes y aprendizajes. AWS y Hello World incluyen carruseles fotográficos; Hello World también permite consultar su presentación. Los visitantes pueden enviar reflexiones, que se publican después de su aprobación en el panel de administración.
+Cada conferencia reúne detalles, participantes, aprendizajes y un botón para agregar boletos al carrito. AWS y Hello World incluyen carruseles fotográficos; Hello World también permite consultar su presentación. Los visitantes pueden enviar reflexiones, que se publican después de su aprobación en el panel de administración.
+
+Los precios de demostración son **$250 MXN para AWS**, **$150 MXN para el Dr. Omar** y **$100 MXN para Hello World**. El carrito permite ajustar cantidades, eliminar conferencias, vaciar la selección y confirmar una compra simulada con resumen del total. No realiza cobros ni reservas reales.
+
+El carrito se conserva en el navegador al cambiar de página o recargar. Las fechas, fotografías y materiales se mantienen como referencia de los encuentros originales.
 
 ## 3. Tecnologías utilizadas
 
@@ -90,9 +94,11 @@ DESIGN.md          Criterios de diseño de la interfaz
 
 ## 6. Verificación del proyecto
 
-Para revisar el flujo principal, abre una conferencia y envía una reflexión. Después, ingresa al panel, localiza el envío y apruébalo. Al recargar la conferencia, el comentario aparecerá públicamente. Desde el panel también puedes rechazarlo, devolverlo a pendientes o eliminarlo con confirmación.
+Para revisar la compra, agrega boletos desde la portada, el catálogo o el detalle de una conferencia. Abre el carrito desde la navegación, modifica las cantidades y confirma la compra simulada. Verás el resumen y el carrito quedará vacío. Este flujo utiliza JavaScript y almacenamiento local; no requiere registro ni guarda pedidos en MariaDB.
 
-Las pruebas automatizadas comprueban las rutas, la autenticación, el CRUD, el diseño en distintos tamaños de pantalla, la navegación por teclado y el funcionamiento sin JavaScript. Se ejecutan sobre una base independiente de los datos de la aplicación.
+Para revisar el CRUD de comentarios, abre una conferencia y envía una reflexión. Después, ingresa al panel, localiza el envío y apruébalo. Al recargar la conferencia, el comentario aparecerá públicamente. Desde el panel también puedes rechazarlo, devolverlo a pendientes o eliminarlo con confirmación.
+
+Las pruebas automatizadas comprueban el carrito, los totales, la persistencia y la confirmación simulada, además de las rutas, la autenticación, el CRUD, el diseño en distintos tamaños de pantalla, la navegación por teclado y el funcionamiento sin JavaScript. Se ejecutan sobre una base independiente de los datos de la aplicación.
 
 Desde la carpeta de la aplicación, después de completar la instalación:
 

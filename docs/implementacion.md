@@ -17,6 +17,16 @@ La aplicación está en `aragon-conecta/`, separada en `config`, `routes`, `cont
 
 Bootstrap se sirve localmente desde la distribución instalada, con una hoja propia que aplica la identidad de Aragón. No se emplean React, Tailwind ni un proceso de compilación para las vistas.
 
+## Carrito y compra simulada
+
+Los precios de ejemplo viven en `aragon-conecta/data/boletos.js`: AWS 25000, Dr. Omar 15000 y Hello World 10000 centavos de MXN. El módulo toma nombres e imágenes del contenido editorial y ofrece un catálogo común a las vistas y al navegador mediante un atributo EJS escapado. Los importes se calculan con enteros y se formatean en pesos mexicanos.
+
+El carrito está implementado con JavaScript nativo y un diálogo lateral accesible. `localStorage` guarda únicamente una lista de `{ slug, cantidad }` bajo `aragon-conecta:carrito:v1`; las cantidades van de 1 a 99. Los precios y nombres siempre se obtienen del catálogo actual. Se descartan entradas desconocidas o inválidas, se agrupan duplicados y se recupera una selección vacía ante JSON corrupto. Si el almacenamiento está bloqueado, el carrito funciona en memoria durante esa página. Las pestañas del mismo navegador sincronizan los cambios mediante el evento `storage`.
+
+La confirmación muestra un resumen y vacía el carrito. No realiza cobros, reservas, emisiones de boletos ni solicitudes de escritura al servidor. No se añadieron tablas de pedidos ni nuevas rutas/API. Las fechas y los materiales se conservan como referencia de los eventos originales, y el precio se identifica como demostración en el flujo de compra.
+
+El carrito requiere JavaScript. Sin él, las conferencias y los formularios de comentarios y administración siguen funcionando; los botones del carrito se mantienen desactivados y se muestra una explicación.
+
 ## Datos
 
 - **Conferencia:** slug único, título, categoría, resumen, fecha opcional, horario y sede opcionales, orden y contenido editorial JSON. El JSON contiene programa, participantes, temas, aprendizajes y referencias a imágenes locales.
@@ -76,4 +86,4 @@ La carga inicial no cambia la contraseña de un administrador existente. Antes d
 
 La integración corre solo sobre una base cuyo nombre termine en `_test`, y la recrea para cada ejecución. La instancia de la aplicación y la instancia de pruebas tienen puertos y almacenamiento separados. No ejecutar ambas suites simultáneamente: `npm run test:all` las ordena.
 
-La suite de navegador comprueba 320, 360, 768 y 1440 px, navegación móvil con teclado, enfoque después de cerrar el visor, funcionamiento sin JavaScript, publicación tras moderación, eliminación y carga local de recursos. Axe revisa criterios automatizables WCAG AA. Una auditoría automática no sustituye la revisión manual con tecnologías de asistencia.
+La suite de navegador comprueba el carrito (cantidades, precios, total, persistencia, límites, eliminación, compra simulada, almacenamiento bloqueado o corrupto y sincronización entre pestañas) y la accesibilidad del diálogo y su confirmación. También comprueba 320, 360, 768 y 1440 px, navegación móvil con teclado, enfoque después de cerrar el visor, funcionamiento sin JavaScript, publicación tras moderación, eliminación y carga local de recursos. Axe revisa criterios automatizables WCAG AA. Una auditoría automática no sustituye la revisión manual con tecnologías de asistencia.
