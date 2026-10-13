@@ -1,9 +1,15 @@
+// Gestiona el acceso y la moderación. El administrador puede buscar comentarios, cambiar
+// su estado y eliminarlos con confirmación.
 import bcrypt from "bcryptjs";
 import { randomBytes } from "node:crypto";
 import { Op } from "sequelize";
 import { Administrador, Comentario, Conferencia } from "../models/index.js";
 import { flash } from "../middleware/security.js";
+// Hace una comparación de contraseña también cuando el correo no existe, para que la
+// respuesta no delate esa diferencia de tiempo fácilmente.
 const dummyHash = bcrypt.hashSync(randomBytes(32).toString("hex"), 12);
+// Conserva los filtros al volver al panel. Sólo acepta una dirección de /admin para evitar
+// redirecciones a sitios externos.
 function returnToPanel(value) {
   if (typeof value === "string" && value.length <= 1000 && /^\/admin(?:\?|$)/.test(value)) {
     const url = new URL(value, "http://panel.local");
@@ -12,6 +18,7 @@ function returnToPanel(value) {
   }
   return "/admin#moderacion-feedback";
 }
+// Si ya inició sesión, manda al panel; en otro caso muestra el formulario de acceso.
 export const loginForm = (req, res) =>
   req.session.adminId
     ? res.redirect("/admin")
@@ -19,6 +26,8 @@ export const loginForm = (req, res) =>
         title: "Acceso de administración",
         error: null,
       });
+// Limpia el correo, limita la contraseña al tamaño que acepta bcrypt y busca al
+// administrador.
 export async function login(req, res) {
   const email =
     typeof req.body.email === "string"
@@ -33,6 +42,8 @@ export async function login(req, res) {
     email.length <= 254
       ? await Administrador.findOne({ where: { email } })
       : null;
+// bcrypt comprueba la contraseña contra el hash guardado; no se compara con una contraseña
+// en texto plano.
   const valid = await bcrypt.compare(
     password,
     admin?.passwordHash || dummyHash,
@@ -44,6 +55,8 @@ export async function login(req, res) {
         title: "Acceso de administración",
         error: "El correo o la contraseña no son correctos.",
       });
+// Al entrar se crea un identificador de sesión nuevo. Luego se guarda el id del
+// administrador antes de redirigir.
   await new Promise((resolve, reject) =>
     req.session.regenerate((error) => (error ? reject(error) : resolve())),
   );
@@ -53,6 +66,7 @@ export async function login(req, res) {
   );
   res.redirect(303, "/admin");
 }
+// Destruye la sesión guardada y borra su cookie del navegador.
 export async function logout(req, res) {
   await new Promise((resolve, reject) =>
     req.session.destroy((error) => (error ? reject(error) : resolve())),
@@ -60,6 +74,7 @@ export async function logout(req, res) {
   res.clearCookie("semana.sid");
   res.redirect(303, "/admin/login");
 }
+// Lee los filtros de la URL y prepara la lista de comentarios y los contadores del panel.
 export async function panel(req, res) {
   const estado = ["pendiente", "aprobado", "rechazado"].includes(
     req.query.estado,
@@ -71,6 +86,8 @@ export async function panel(req, res) {
   const conferencias = await Conferencia.findAll({ order: [["orden", "ASC"]] });
   const seleccionada = conferencias.find((c) => c.slug === slug);
   const q = typeof req.query.q === "string" ? req.query.q.trim().slice(0, 120) : "";
+// La conferencia y la búsqueda forman la selección base. La búsqueda revisa nombre o
+// mensaje.
   const scope = {
     ...(seleccionada && { conferenciaId: seleccionada.id }),
     ...(q && { [Op.or]: [
@@ -78,10 +95,13 @@ export async function panel(req, res) {
       { mensaje: { [Op.like]: `%${q}%` } },
     ] }),
   };
+// El estado se agrega a la selección sólo para la lista; los contadores siguen mostrando
+// todos los estados de esa selección.
   const where = {
     ...scope,
     ...(estado && { estado }),
   };
+// Una página inválida se trata como la primera. Cada página muestra veinte comentarios.
   const requestedPage = Number(req.query.pagina);
   const requested =
     Number.isSafeInteger(requestedPage) &&
@@ -89,12 +109,18 @@ export async function panel(req, res) {
     requestedPage < 100000
       ? requestedPage
       : 1;
+// Estas dos consultas independientes pueden hacerse al mismo tiempo: total de resultados y
+// total por estado.
   const [count, grouped] = await Promise.all([
     Comentario.count({ where }),
     Comentario.count({ where: scope, group: ["estado"] }),
   ]);
   const paginas = Math.ceil(count / 20);
+// Si se borró el último resultado de una página, vuelve a la última página que todavía
+// exista.
   const pagina = Math.min(requested, Math.max(1, paginas));
+// Trae también el título y la URL de la conferencia para identificar de dónde salió cada
+// comentario.
   const comentarios = await Comentario.findAll({
     where,
     include: [
@@ -112,6 +138,8 @@ export async function panel(req, res) {
     totals[row.estado] = Number(row.count);
     totals.todos += Number(row.count);
   }
+// Construye enlaces conservando búsqueda y conferencia. URLSearchParams se encarga de
+// codificar sus valores.
   const filterUrl = (state = estado, page = 1) => {
     const query = new URLSearchParams();
     if (state) query.set("estado", state);
@@ -135,6 +163,8 @@ export async function panel(req, res) {
     returnTo: filterUrl(estado, pagina),
   });
 }
+// Sólo cambia el estado del comentario. Rechaza valores desconocidos o ids que ya no
+// existen.
 export async function actualizar(req, res) {
   if (!["pendiente", "aprobado", "rechazado"].includes(req.body.estado))
     return res
@@ -164,6 +194,7 @@ export async function actualizar(req, res) {
   flash(req, "success", messages[req.body.estado]);
   res.redirect(303, returnToPanel(req.body.volver));
 }
+// Exige la confirmación del formulario antes de borrar definitivamente el comentario.
 export async function eliminar(req, res) {
   if (req.body.confirmar !== "eliminar")
     return res

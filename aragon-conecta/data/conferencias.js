@@ -1,3 +1,7 @@
+// Contiene los textos y recursos iniciales de las tres conferencias. db:seed los copia a
+// MariaDB sólo cuando aún no existen.
+// Esta función reúne las tres versiones de una foto: pequeña, mediana y original, junto
+// con su descripción y medidas.
 const foto = (nombre, alt, caption, width, height) => ({
   src: `/media/${nombre}.webp`,
   thumb: `/media/${nombre}-960.webp`,
@@ -7,6 +11,8 @@ const foto = (nombre, alt, caption, width, height) => ({
   width,
   height,
 });
+// Las fotos usan nombres de public/media. Aquí sólo guardamos sus rutas; las imágenes no
+// se meten dentro de la base de datos.
 const awsEquipo = foto(
   "aws-equipo",
   "Organizadores del encuentro AWS frente al escenario de la FES Aragón",
@@ -50,8 +56,11 @@ const helloEquipo = foto(
   1200,
 );
 
+// Cada objeto representa una conferencia: datos generales y un contenido JSON con
+// secciones, participantes y materiales.
 export const conferencias = [
   {
+// Encuentro AWS: reúne tres intervenciones dentro de una misma conferencia.
     slug: "infraestructura-del-manana",
     orden: 1,
     titulo:
@@ -137,6 +146,8 @@ export const conferencias = [
     },
   },
   {
+// Conferencia del Dr. Omar: no se inventan fecha, horario ni sede cuando no están
+// confirmados.
     slug: "sostenibilidad-de-los-datos",
     orden: 2,
     titulo: "Sostenibilidad en los datos: software y soberanía tecnológica",
@@ -195,6 +206,7 @@ export const conferencias = [
     },
   },
   {
+// Hello World: incluye el equipo, fotografías y acceso a su presentación original.
     slug: "hello-world",
     orden: 3,
     titulo: "De “Hello World” a proyectos con impacto real",

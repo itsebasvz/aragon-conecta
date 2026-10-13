@@ -1,9 +1,15 @@
+// Define las tablas de la aplicación: conferencias, comentarios y administradores. Cada
+// propiedad indica qué dato guarda una columna y qué valores acepta.
 import { DataTypes } from "sequelize";
 import { db } from "../config/db.js";
+// Una conferencia guarda sus datos generales. contenido reúne los textos, participantes y
+// fotografías en JSON.
 export const Conferencia = db.define(
   "Conferencia",
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+// El slug es el nombre corto de la URL, como hello-world. No se puede repetir entre
+// conferencias.
     slug: { type: DataTypes.STRING(100), allowNull: false, unique: true },
     titulo: { type: DataTypes.STRING(255), allowNull: false },
     categoria: { type: DataTypes.STRING(80), allowNull: false },
@@ -16,6 +22,8 @@ export const Conferencia = db.define(
   },
   { tableName: "conferencias" },
 );
+// Cada reflexión pertenece a una conferencia. Los límites de texto también se comprueban
+// en el modelo.
 export const Comentario = db.define(
   "Comentario",
   {
@@ -35,6 +43,8 @@ export const Comentario = db.define(
       allowNull: false,
       validate: { len: [10, 1500] },
     },
+// Un comentario nuevo queda pendiente; sólo la administración puede aprobarlo o
+// rechazarlo.
     estado: {
       type: DataTypes.ENUM("pendiente", "aprobado", "rechazado"),
       defaultValue: "pendiente",
@@ -43,9 +53,12 @@ export const Comentario = db.define(
   },
   {
     tableName: "comentarios",
+// Este índice ayuda a buscar los comentarios de una conferencia por estado y fecha.
     indexes: [{ fields: ["conferenciaId", "estado", "createdAt"] }],
   },
 );
+// Una conferencia tiene muchos comentarios; cada comentario pertenece a una conferencia.
+// RESTRICT impide borrar una conferencia que aún tenga comentarios.
 Conferencia.hasMany(Comentario, {
   foreignKey: "conferenciaId",
   as: "comentarios",
@@ -55,6 +68,8 @@ Comentario.belongsTo(Conferencia, {
   foreignKey: "conferenciaId",
   as: "conferencia",
 });
+// La contraseña se guarda como hash, una representación protegida, en lugar de conservar
+// su texto original.
 export const Administrador = db.define(
   "Administrador",
   {

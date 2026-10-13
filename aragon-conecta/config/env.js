@@ -1,13 +1,21 @@
+// Lee .env y reúne la configuración en un solo objeto. Los demás archivos usan este objeto
+// en lugar de repetir las variables de entorno.
 import dotenv from "dotenv";
 import { fileURLToPath } from "node:url";
 
+// Calcula la carpeta de la aplicación a partir de este archivo; no depende de dónde se
+// abrió la terminal.
 export const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 dotenv.config({ path: `${projectRoot}.env`, quiet: true });
 const secret = process.env.SESSION_SECRET;
+// La clave de sesión debe ser suficientemente larga. No se inventa una clave fija si falta
+// la configuración.
 if (!secret || secret.length < 32)
   throw new Error(
     "Configura SESSION_SECRET con al menos 32 caracteres en .env. Consulta .env.example.",
   );
+// Convierte puertos a números y el modo de producción a verdadero o falso. Los valores por
+// defecto sirven para desarrollo local.
 export const config = {
   production: process.env.NODE_ENV === "production",
   secret,
