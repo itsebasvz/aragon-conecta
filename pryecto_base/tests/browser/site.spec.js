@@ -172,11 +172,30 @@ test("envío progresivo, moderación, publicación y eliminación", async ({
   await expect(
     admin.getByRole("heading", { name: "Moderación de comentarios" }),
   ).toBeVisible();
+  await admin.goto(`/admin?estado=pendiente&conferencia=hello-world&q=${encodeURIComponent(name)}`);
+  await expect(admin.getByRole("link", { name: "Pendientes: 1", exact: true })).toBeVisible();
   let card = admin.locator(".moderation-card").filter({ hasText: name });
-  await card.locator("select").selectOption("aprobado");
-  await card.getByRole("button", { name: "Guardar estado" }).click();
+  await card.getByRole("button", { name: "Aprobar", exact: true }).click();
+  expect(new URL(admin.url()).searchParams.get("estado")).toBe("pendiente");
+  expect(new URL(admin.url()).searchParams.get("q")).toBe(name);
+  await expect(admin.locator(".admin-feedback")).toContainText("Comentario aprobado");
+  await expect(admin.locator(".moderation-card")).toHaveCount(0);
+  await expect(admin.getByRole("link", { name: "Aprobados: 1", exact: true })).toBeVisible();
   await page.reload();
   await expect(page.locator(".comment-list")).toContainText(name);
+  await expect(page.locator(".comment").filter({hasText: name}).locator(".comment-avatar")).toBeVisible();
+  await admin.getByRole("link", { name: "Aprobados: 1", exact: true }).click();
+  card = admin.locator(".moderation-card").filter({ hasText: name });
+  await card.getByRole("button", { name: "Rechazar", exact: true }).click();
+  await page.reload();
+  await expect(page.locator(".comment-list")).not.toContainText(name);
+  await admin.getByRole("link", { name: "Rechazados: 1", exact: true }).click();
+  card = admin.locator(".moderation-card").filter({ hasText: name });
+  await card.getByRole("button", { name: "Devolver a pendientes", exact: true }).click();
+  await admin.getByRole("link", { name: "Pendientes: 1", exact: true }).click();
+  card = admin.locator(".moderation-card").filter({ hasText: name });
+  await card.getByRole("button", { name: "Aprobar", exact: true }).click();
+  await admin.getByRole("link", { name: "Aprobados: 1", exact: true }).click();
   card = admin.locator(".moderation-card").filter({ hasText: name });
   await card.locator("summary").click();
   await card.getByRole("checkbox").check();

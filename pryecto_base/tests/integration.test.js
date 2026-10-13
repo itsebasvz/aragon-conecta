@@ -242,6 +242,40 @@ test("filtra, valida el estado y oculta los comentarios rechazados", async () =>
     .expect(404);
 });
 
+test("busca comentarios y conserva filtros sin permitir redirecciones externas", async () => {
+  const found = await admin.get("/admin?q=Estudiante&estado=rechazado").expect(200);
+  assert.match(found.text, /action="\/admin\/comentarios\/\d+\?_method=PUT"/);
+  assert.match(found.text, /aria-label="Rechazados: [1-9]/);
+  const empty = await admin.get("/admin?q=NoExisteEstaReflexion").expect(200);
+  assert.match(empty.text, /Sin resultados en esta selección/);
+  for (const [volver, expected] of [
+    ["https://example.com/", "/admin#moderacion-feedback"],
+    ["//example.com/admin", "/admin#moderacion-feedback"],
+    ["/admin?estado=rechazado&q=Estudiante", "/admin?estado=rechazado&q=Estudiante#moderacion-feedback"],
+  ]) {
+    const response = await admin.post(`/admin/comentarios/${commentId}?_method=PUT`)
+      .type("form").send({ _csrf: adminToken, estado: "rechazado", volver }).expect(303);
+    assert.equal(response.headers.location, expected);
+  }
+});
+
+test("ajusta la última página cuando se elimina su último comentario", async () => {
+  const created = await Comentario.bulkCreate(Array.from({ length: 21 }, (_, i) => ({
+    conferenciaId: 1, nombre: `Paginación UX ${i}`, mensaje: "Una reflexión para verificar la navegación entre páginas.",
+  })));
+  const ids = created.map(c => c.id);
+  try {
+    const response = await admin.get("/admin?q=Paginación%20UX&pagina=2").expect(200);
+    assert.equal((response.text.match(/class="moderation-card"/g) || []).length, 1);
+    const id = Number(response.text.match(/action="\/admin\/comentarios\/(\d+)\?_method=PUT"/)[1]);
+    await Comentario.destroy({ where: { id } });
+    const adjusted = await admin.get("/admin?q=Paginación%20UX&pagina=2").expect(200);
+    assert.equal((adjusted.text.match(/class="moderation-card"/g) || []).length, 20);
+  } finally {
+    await Comentario.destroy({ where: { id: ids } });
+  }
+});
+
 test("la carga inicial es idempotente y conserva comentarios existentes", async () => {
   const count = await Comentario.count();
   for (let i = 0; i < 2; i++)
