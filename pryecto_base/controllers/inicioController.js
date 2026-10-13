@@ -14,12 +14,6 @@ export async function catalogo(req, res) {
     conferencias: await getConferencias(),
   });
 }
-export async function galeria(req, res) {
-  res.render("galeria", {
-    title: "Memoria fotográfica",
-    conferencias: await getConferencias(),
-  });
-}
 export async function getConferencia(req, res, next) {
   const conferencia = await Conferencia.findOne({
     where: { slug: req.params.slug },

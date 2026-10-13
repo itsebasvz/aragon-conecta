@@ -7,7 +7,6 @@ const publicPages = [
   "/conferencias/infraestructura-del-manana",
   "/conferencias/sostenibilidad-de-los-datos",
   "/conferencias/hello-world",
-  "/galeria",
   "/acerca",
   "/privacidad",
   "/admin/login",
@@ -55,11 +54,12 @@ test("menú móvil accesible con teclado y ampliación de fotografías", async (
   await expect(toggle).toHaveAttribute("aria-expanded", "true");
   await page
     .locator("#nav-links")
-    .getByRole("link", { name: "Galería" })
+    .getByRole("link", { name: "Conferencias", exact: true })
     .focus();
   await page.keyboard.press("Escape");
   await expect(toggle).toBeFocused();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await page.goto("/conferencias/hello-world");
   const photo = page.locator("[data-lightbox]").first();
   await photo.click();
   await expect(page.getByRole("dialog")).toBeVisible();
@@ -164,7 +164,6 @@ test("accesibilidad automática WCAG AA en páginas públicas", async ({
   for (const path of [
     "/",
     "/conferencias/hello-world",
-    "/galeria",
     "/acerca",
     "/admin/login",
   ]) {

@@ -35,7 +35,7 @@
     <span class="mobile-nav-label">Semana de Ingeniería</span>
     <button class="nav-toggle" type="button" aria-controls="nav-links" aria-expanded="false" hidden><svg class="icon"><use href="#i-menu"/></svg><span>Menú</span></button>
     <div class="nav-links" id="nav-links" data-open="false">
-    <% for (const item of [{href:'/', text:'Inicio'}, {href:'/conferencias',text:'Conferencias'}, {href:'/galeria',text:'Galería'}, {href:'/acerca',text:'Acerca del proyecto'}]) { const active = item.href === '/' ? path === '/' : path.startsWith(item.href); %>
+    <% for (const item of [{href:'/', text:'Inicio'}, {href:'/conferencias',text:'Conferencias'}, {href:'/acerca',text:'Acerca del proyecto'}]) { const active = item.href === '/' ? path === '/' : path.startsWith(item.href); %>
       <a href="<%= item.href %>"<% if(active) { %> aria-current="page"<% } %>><%= item.text %></a>
     <% } %>
     </div>

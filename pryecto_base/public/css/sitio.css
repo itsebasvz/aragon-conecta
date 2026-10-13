@@ -616,22 +616,6 @@ figcaption {
   color: var(--muted);
   margin-top: 10px;
 }
-.photo-mosaic {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: 24px;
-  grid-template-rows: 1fr 1fr;
-}
-.photo-mosaic > .photo-figure:first-child {
-  grid-row: span 2;
-}
-.photo-mosaic > .photo-figure:first-child .photo-link img {
-  height: 100%;
-  aspect-ratio: 1.3;
-}
-.photo-mosaic > .photo-figure:not(:first-child) .photo-link img {
-  height: 160px;
-}
 .conversation-section {
   border: 1px solid var(--border);
   background: #f8fafc;
@@ -641,7 +625,7 @@ figcaption {
   align-items: center;
   gap: 26px;
   padding: 32px;
-  margin-bottom: 72px;
+  margin-block: 72px;
 }
 .conversation-section .eyebrow {
   margin-bottom: 9px;
@@ -1212,29 +1196,6 @@ figcaption {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-.gallery-index {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-  align-items: center;
-  padding-block: 22px;
-  font-size: 11px;
-  border-bottom: 1px solid var(--border);
-}
-.gallery-index span {
-  color: var(--muted);
-}
-.gallery-index a {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-}
-.gallery-event {
-  border-bottom: 1px solid var(--border);
-}
-.gallery-event:last-of-type {
-  border-bottom: 0;
-}
 .about-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
@@ -1651,22 +1612,6 @@ figcaption {
 .comment strong {
   font-size: 14px;
 }
-.gallery-index {
-  font-size: 13px;
-}
-/* Cada fotografía ocupa su celda sin dejar superficies vacías bajo la imagen. */
-.photo-mosaic {
-  height: 520px;
-}
-.photo-mosaic .photo-link img {
-  position: absolute;
-  inset: 0;
-  height: 100% !important;
-  aspect-ratio: auto !important;
-}
-.photo-mosaic figcaption {
-  flex-shrink: 0;
-}
 @media (min-width: 1500px) {
   .home-hero {
     gap: 80px;
@@ -1941,22 +1886,6 @@ figcaption {
     font-size: 13px;
     max-width: none;
   }
-  .photo-mosaic {
-    grid-template-columns: 1fr 1fr;
-    gap: 20px 14px;
-    grid-template-rows: auto;
-  }
-  .photo-mosaic > .photo-figure:first-child {
-    grid-column: span 2;
-    grid-row: auto;
-  }
-  .photo-mosaic > .photo-figure:first-child .photo-link img {
-    aspect-ratio: 1.6;
-    height: auto;
-  }
-  .photo-mosaic > .photo-figure:not(:first-child) .photo-link img {
-    height: 125px;
-  }
   .photo-figure figcaption {
     font-size: 10px;
   }
@@ -1975,7 +1904,7 @@ figcaption {
     flex-direction: column;
     align-items: start;
     padding: 24px;
-    margin-bottom: 44px;
+    margin-block: 44px;
     gap: 18px;
   }
   .conversation-section h2 {
@@ -2157,23 +2086,6 @@ figcaption {
   .comment time {
     font-size: 9px;
   }
-  .gallery-index {
-    gap: 6px 18px;
-    padding-block: 16px;
-  }
-  .gallery-index > span {
-    width: 100%;
-    font-size: 11px;
-  }
-  .gallery-event .section-heading {
-    flex-direction: column;
-    gap: 8px;
-  }
-  .gallery-event .section-heading > .text-link {
-    max-width: none;
-    align-self: start;
-    font-size: 12px;
-  }
   .about-layout {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -2264,16 +2176,6 @@ figcaption {
   }
 }
 @media (max-width: 767px) {
-  .photo-mosaic {
-    height: auto;
-  }
-  .photo-mosaic .photo-link {
-    flex: none;
-    aspect-ratio: 1.3;
-  }
-  .photo-mosaic > .photo-figure:first-child .photo-link {
-    aspect-ratio: 1.6;
-  }
   .hero-description,
   .event-card-body > p,
   .insight-grid p {

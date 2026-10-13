@@ -3,7 +3,6 @@ import { rateLimit } from "express-rate-limit";
 import {
   inicio,
   catalogo,
-  galeria,
   getConferencia,
   detalle,
   comentar,
@@ -38,7 +37,6 @@ router.post(
   getConferencia,
   comentar,
 );
-router.get("/galeria", galeria);
 router.get("/acerca", (req, res) =>
   res.render("acerca", { title: "Acerca del proyecto" }),
 );

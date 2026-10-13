@@ -39,7 +39,6 @@ test("renderiza todas las páginas y los recursos locales", async () => {
   for (const url of [
     "/",
     "/conferencias",
-    "/galeria",
     "/acerca",
     "/privacidad",
     "/admin/login",
@@ -74,6 +73,7 @@ test("la API solo expone datos públicos y conserva la información confirmada",
     .get("/api/conferencias/inexistente/comentarios")
     .expect(404);
   await request(app).get("/conferencias/inexistente").expect(404);
+  await request(app).get("/galeria").expect(404);
   await request(app).get("/docs/CRUD_Persona.pdf").expect(404);
 });
 
