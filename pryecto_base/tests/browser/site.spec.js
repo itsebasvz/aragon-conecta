@@ -68,6 +68,59 @@ test("menú móvil accesible con teclado y ampliación de fotografías", async (
   await expect(photo).toBeFocused();
 });
 
+test("carrusel con flechas, miniaturas, teclado y ampliación", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/conferencias/infraestructura-del-manana");
+  const carousel = page.locator("[data-photo-carousel]");
+  const status = carousel.locator("[data-photo-status]");
+  const track = carousel.locator("[data-photo-track]");
+  await carousel.scrollIntoViewIfNeeded();
+  await expect(status).toHaveText("Foto 1 de 3");
+  await expect(carousel.getByRole("button", { name: "Fotografía anterior" })).toBeDisabled();
+  await carousel.getByRole("button", { name: "Fotografía siguiente" }).click();
+  await expect(status).toHaveText("Foto 2 de 3");
+  await carousel.locator("[data-photo-index='2']").click();
+  await expect(status).toHaveText("Foto 3 de 3");
+  await expect(carousel.locator("[data-photo-index='2']")).toHaveAttribute("aria-current", "true");
+  await expect(carousel.getByRole("button", { name: "Fotografía siguiente" })).toBeDisabled();
+  const photo = carousel.locator("[data-lightbox]").nth(2);
+  await photo.click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await expect(page.locator(".dialog-image")).toHaveAttribute("alt", /EnCore/);
+  await page.keyboard.press("Escape");
+  await expect(photo).toBeFocused();
+  await track.focus();
+  await page.keyboard.press("Home");
+  await expect(status).toHaveText("Foto 1 de 3");
+  await page.keyboard.press("ArrowRight");
+  await expect(status).toHaveText("Foto 2 de 3");
+  await page.setViewportSize({ width: 360, height: 800 });
+  await expect(status).toHaveText("Foto 2 de 3");
+  await track.evaluate(el => el.scrollTo({ left: el.scrollWidth, behavior: "instant" }));
+  await expect(status).toHaveText("Foto 3 de 3");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.goto("/conferencias/hello-world");
+  await expect(page.locator("[data-photo-status]")).toHaveText("Foto 1 de 2");
+  await page.goto("/conferencias/sostenibilidad-de-los-datos");
+  await expect(page.getByRole("heading", { name: "Así se vivió" })).toHaveCount(0);
+  await expect(page.locator(".gallery-band")).toHaveCount(0);
+  await expect(page.locator(".source-note")).toContainText("Fuente de la reseña");
+});
+
+test("fotografías accesibles sin JavaScript", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 360, height: 800 } });
+  const page = await context.newPage();
+  await page.goto("http://127.0.0.1:2810/conferencias/infraestructura-del-manana");
+  const carousel = page.locator("[data-photo-carousel]");
+  await expect(carousel.locator("[data-photo-controls]")).toBeHidden();
+  const last = carousel.locator("[data-lightbox]").last();
+  await last.focus();
+  await expect(last).toBeInViewport();
+  await expect(last).toHaveAttribute("href", /aws-sebastian\.webp$/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await context.close();
+});
+
 test("envío progresivo, moderación, publicación y eliminación", async ({
   page,
   browser,
