@@ -207,7 +207,7 @@ export const conferencias = [
     contenido: {
       corto: "De Hello World a proyectos con impacto real",
       organizador: "Club Hello World · FES Aragón",
-      imagen: hello,
+      imagen: helloEquipo,
       introduccion:
         "Hello World compartió con la comunidad de Aragón lo que ocurre cuando el aprendizaje sale del aula y se convierte en colaboración. La presentación reunió proyectos, experiencias en hackatones y vínculos con universidades, empresas y comunidades tecnológicas.",
       ponentes: [
