@@ -1,97 +1,112 @@
-# Semana de Ingeniería 2027-1 · FES Aragón, UNAM
+# Aragón Conecta
 
-Memoria académica de tres encuentros de la Semana de Ingeniería: **Infraestructura del mañana**, **Sostenibilidad en los datos** y **De Hello World a proyectos con impacto real**. Proyecto del primer parcial de Programación Web 2, grupo 1708, del profesor Miguel Angel Sánchez Hernández.
+**Semana de Ingeniería 2027-1 · FES Aragón, UNAM**
 
-**Autores:** Jesús Sebastián Vázquez Zarco y Valeria Guadalupe Guillén Hernández · Ingeniería en Computación.
+Sitio web para difundir tres conferencias de la Semana de Ingeniería, compartir sus aprendizajes y abrir un espacio de reflexión para la comunidad universitaria.
 
-La aplicación vive en [`aragon-conecta`](aragon-conecta). Usa Node.js 22, Express 5, EJS, Bootstrap 5.3.8 local, Sequelize 6 y MariaDB 11.4. Incluye reseñas, carruseles de fotos en AWS y Hello World, 29 diapositivas de Hello World, comentarios moderados y administración privada.
+## 1. Datos académicos
 
-Los carruseles avanzan cada seis segundos y permiten pausar o recorrer las fotos manualmente. El avance se detiene al interactuar, al quedar fuera de vista o al ocultar la pestaña. Con la preferencia de movimiento reducido comienzan pausados; sin JavaScript se pueden recorrer mediante desplazamiento.
+| Campo | Información |
+| --- | --- |
+| Institución | Facultad de Estudios Superiores Aragón, UNAM |
+| Carrera | Ingeniería en Computación |
+| Asignatura | Programación Web 2 |
+| Profesor | Miguel Angel Sánchez Hernández |
+| Grupo | 1708 |
+| Entrega | Proyecto del primer parcial |
 
-Las reflexiones se presentan en tarjetas con iniciales y fecha. El panel permite buscar por nombre o texto, consultar contadores por estado y aprobar, rechazar o devolver a pendientes con acciones directas. Los contadores respetan la conferencia y la búsqueda seleccionadas; los filtros se conservan después de moderar o eliminar. Estos formularios también funcionan sin JavaScript.
+**Integrantes:**
 
-## Arranque con Docker
+- Jesús Sebastián Vázquez Zarco
+- Valeria Guadalupe Guillén Hernández
 
-Requisitos: Node.js 22, npm y Docker con Compose. Desde esta carpeta:
+## 2. Objetivo y contenido
+
+El proyecto aplica las tecnologías estudiadas durante el semestre para construir una aplicación web con contenido almacenado en una base de datos, vistas dinámicas y formularios. Su diseño toma como referencia la identidad institucional de la FES Aragón.
+
+Se presentan tres encuentros del periodo académico 2027-1, celebrados en 2026:
+
+- **Infraestructura del mañana:** experiencias profesionales, computación en la nube y proyectos con AWS.
+- **Sostenibilidad en los datos:** software, preservación de información y soberanía tecnológica.
+- **De Hello World a proyectos con impacto real:** aprendizaje, proyectos y participación en la comunidad estudiantil.
+
+Cada conferencia reúne una reseña, participantes y aprendizajes. AWS y Hello World incluyen carruseles fotográficos; Hello World también permite consultar su presentación. Los visitantes pueden enviar reflexiones, que se publican después de su aprobación en el panel de administración.
+
+## 3. Tecnologías utilizadas
+
+| Tecnología | Aplicación en el proyecto |
+| --- | --- |
+| Node.js 22 y Express 5 | Servidor, rutas y controladores |
+| EJS | Vistas dinámicas renderizadas en el servidor |
+| HTML, CSS, JavaScript y Bootstrap 5 | Interfaz adaptable e interacción |
+| Sequelize 6 y MariaDB 11.4 | Modelos, relaciones y persistencia de datos |
+| Docker Compose | Entorno local de aplicación y base de datos |
+
+El sistema de comentarios integra las operaciones **CRUD**: crear una reflexión, consultar los envíos, actualizar su estado y eliminar registros. El panel requiere autenticación y permite buscar y filtrar comentarios. La aplicación también expone las conferencias en formato JSON mediante `/api/conferencias`.
+
+La [guía de implementación](docs/implementacion.md#correspondencia-con-los-pdf) relaciona estas funciones con los materiales del curso.
+
+## 4. Instalación y ejecución
+
+**Requisitos:** Git, Node.js 22 con npm y Docker con Docker Compose.
 
 ```bash
-cd aragon-conecta
+git clone https://github.com/itsebasvz/aragon-conecta.git
+cd aragon-conecta/aragon-conecta
 npm ci
 npm run setup
 docker compose --profile web up -d --build --wait
 ```
 
-Abre **http://localhost:2800**. El panel está en **http://localhost:2800/admin**.
+| Acceso | Dirección |
+| --- | --- |
+| Sitio web | http://localhost:2800 |
+| Administración | http://localhost:2800/admin |
+| API de conferencias | http://localhost:2800/api/conferencias |
 
-`npm run setup` genera claves únicas y crea `.env` con permisos de lectura restringidos. Consulta `ADMIN_EMAIL` y `ADMIN_PASSWORD` **en ese archivo local** para acceder al panel. No se guardan en Git ni se imprimen en los registros. Si `.env` ya existe, el comando lo conserva.
+`npm run setup` crea el archivo local `.env` con claves únicas. Las credenciales del panel están en `ADMIN_EMAIL` y `ADMIN_PASSWORD` dentro de ese archivo, excluido del repositorio. Si ya existe, se conserva.
 
-La aplicación del contenedor prepara las tablas y carga los tres eventos al arrancar. Los datos existentes se conservan. Las imágenes, los estilos y las fuentes están disponibles localmente: navegar por la web no requiere servicios externos.
-
-Para detener la aplicación sin borrar sus datos:
+En el primer arranque se preparan las tablas y se cargan las tres conferencias. MariaDB conserva los datos en un volumen de Docker. Para detener los servicios, desde la carpeta de la aplicación:
 
 ```bash
 docker compose --profile web stop
 ```
 
-## Desarrollo con Node
+## 5. Estructura del repositorio
 
-Después de `npm ci` y `npm run setup`, puedes utilizar solo MariaDB en Docker y ejecutar Node directamente:
-
-```bash
-docker compose up -d --wait db
-npm run db:init
-npm run db:seed
-npm run server
+```text
+aragon-conecta/     Aplicación web
+├── controllers/   Lógica de las peticiones
+├── models/        Modelos y relaciones de datos
+├── routes/        Rutas públicas y administrativas
+├── views/         Vistas y componentes EJS
+├── public/        Estilos, scripts y recursos optimizados
+├── docs/          Materiales de la asignatura
+└── tests/         Pruebas de integración y navegador
+assets/            Fotografías y recursos originales
+docs/              Guía técnica, fuentes e identidad institucional
+DESIGN.md          Criterios de diseño de la interfaz
 ```
 
-Detén antes el servicio `app` si ya ocupa el puerto 2800. `npm start` inicia sin recarga automática; `npm run server` utiliza nodemon.
+## 6. Verificación del proyecto
 
-Para una instalación propia de MariaDB, crea el esquema y un usuario con permisos sobre él, y configura `BD_NOMBRE`, `BD_USUARIO`, `BD_CLAVE`, `BD_HOST` y `BD_PORT` en `.env`. Las tablas se crean con `npm run db:init`. El puerto que genera el asistente para MariaDB en Docker es **3307**; ajústalo si usas otra instancia.
+Para revisar el flujo principal, abre una conferencia y envía una reflexión. Después, ingresa al panel, localiza el envío y apruébalo. Al recargar la conferencia, el comentario aparecerá públicamente. Desde el panel también puedes rechazarlo, devolverlo a pendientes o eliminarlo con confirmación.
 
-`db:init` crea tablas faltantes sin `force` ni `alter`. `db:seed` agrega únicamente conferencias y administradores inexistentes: no sobrescribe reseñas, contraseñas ni comentarios. El contenido editorial inicial se define en `aragon-conecta/data/conferencias.js`. Los cambios de esquema posteriores requieren una migración explícita.
+Las pruebas automatizadas comprueban las rutas, la autenticación, el CRUD, el diseño en distintos tamaños de pantalla, la navegación por teclado y el funcionamiento sin JavaScript. Se ejecutan sobre una base independiente de los datos de la aplicación.
 
-## Pruebas
-
-Las pruebas usan una instancia independiente de MariaDB en el puerto 3308. La base de pruebas termina en `_test`; los datos de la aplicación no se utilizan.
+Desde la carpeta de la aplicación, después de completar la instalación:
 
 ```bash
-cd aragon-conecta
 docker compose --profile test up -d --wait db-test
 npx playwright install chromium
 npm run test:all
 docker compose --profile test stop db-test
 ```
 
-- `npm test`: integración con MariaDB, páginas, JSON, validación, CSRF, autenticación, CRUD y persistencia en un proceso nuevo.
-- `npm run test:e2e`: navegador en 320, 360, 768 y 1440 px, comentarios, moderación, navegación por teclado, modo sin JavaScript, recursos locales y auditoría automática WCAG AA.
-- `npm audit`: revisión de dependencias.
+## 7. Documentación y licencia
 
-No ejecutes integración y navegador simultáneamente: comparten la instancia de pruebas. La integración recrea exclusivamente las tablas de esa base aislada. Las capturas de revisión se generan en `/tmp/semanaing-escritorio.png` y `/tmp/semanaing-movil.png`.
+- [Guía de implementación](docs/implementacion.md): arquitectura, modelo de datos, rutas y configuración de producción.
+- [Criterios de diseño](DESIGN.md): pautas visuales y referencias institucionales.
+- [Fuentes del contenido](docs/info): reporte académico y materiales de las conferencias.
 
-## Demostración para el parcial
-
-1. Recorre la portada y una conferencia: contenido renderizado desde MariaDB mediante Express y EJS.
-2. Envía una reflexión: se guarda con estado **pendiente** y aún no aparece públicamente.
-3. Entra a `/admin` y consulta el envío. Usa las tarjetas de estado, el filtro de conferencia o la búsqueda por nombre y texto.
-4. Pulsa **Aprobar** y recarga la conferencia para verlo publicado.
-5. Pulsa **Rechazar** para retirarlo de la vista pública, o **Devolver a pendientes** para revisarlo después.
-6. Abre la confirmación de eliminación y bórralo. Esto demuestra las cuatro operaciones CRUD sin modificar el texto del visitante.
-7. Consulta `/api/conferencias` para mostrar una respuesta JSON. La guía técnica relaciona cada capacidad con los PDF del curso.
-
-## Preparación para despliegue
-
-La aplicación está empaquetada para un servidor con Docker; esta entrega no publica un dominio. Consulta [`docs/implementacion.md`](docs/implementacion.md) para la configuración de producción, las rutas y el modelo de datos.
-
-La configuración de producción utiliza HTTPS, cookies seguras y un proxy de confianza explícito. MariaDB y el puerto de la aplicación se exponen solo en la interfaz local del servidor. El volumen `datos-mariadb` conserva el contenido entre reinicios y reconstrucciones.
-
-## Diseño, contenido e historial
-
-La interfaz sigue [`DESIGN.md`](DESIGN.md) y el manual institucional: firmas originales, azul `#002F6C`, amarillo `#F2A900` como acento y Poppins. Los originales están en `assets/` y `docs/`; solo los recursos seleccionados y optimizados se publican desde la aplicación.
-
-2027-1 es el periodo académico; los eventos documentados ocurrieron en 2026. AWS se presenta con los datos confirmados: 25 de septiembre, 17:00–18:30, auditorio del DUACyD. Hello World: 23 de septiembre, 12:30, auditorio A1. Se omiten fecha, horario y sede del Dr. Omar al no estar acreditados.
-
-El historial original del proyecto base se conserva en este repositorio. Su remoto se identifica como `proyecto-base` y apunta al repositorio anterior de clase; no es un destino de publicación de esta web. Los commits nuevos utilizan mensajes convencionales en español.
-
-## Licencia
-
-El código original del proyecto se distribuye bajo la [licencia MIT](LICENSE). Los materiales del curso, fotografías, logotipos y demás recursos de terceros conservan los derechos y condiciones de sus respectivos autores. Consulta la [atribución de los recursos institucionales](assets/README.md#identidad-y-atribución) y la [licencia de la fuente Poppins](aragon-conecta/public/fonts/OFL.txt).
+El código del proyecto se distribuye bajo la [licencia MIT](LICENSE). Las fotografías, los logotipos y los materiales de terceros conservan los derechos de sus autores; consulta las [atribuciones](assets/README.md#identidad-y-atribución) y la [licencia de Poppins](aragon-conecta/public/fonts/OFL.txt).
